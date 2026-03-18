@@ -1,6 +1,12 @@
 <div
     class="game-area flex h-full w-full flex-col bg-amber-50"
-    x-data="{ showLevelUp: false, levelUpText: '' }"
+    x-data="{
+        showLevelUp: false,
+        levelUpText: '',
+        livePlayerLevel: $wire.entangle('playerLevel').live,
+        livePlayerScore: $wire.entangle('playerScore').live,
+        liveCorrectCount: $wire.entangle('correctCount').live
+    }"
     x-on:level-up-animation.window="
         levelUpText = `LEVEL ${$event.detail.level}!`;
         showLevelUp = true;
@@ -14,8 +20,8 @@
             <p class="text-xl font-bold text-orange-700">Halo, {{ $player?->username ?? 'Pemain' }}</p>
         </div>
         <div class="text-right">
-            <p class="text-lg font-bold text-orange-700">Level {{ $playerLevel }}</p>
-            <p class="text-lg font-bold text-amber-900">Skor {{ number_format($player?->total_score ?? 0) }}</p>
+            <p class="text-lg font-bold text-orange-700" x-text="`Level ${livePlayerLevel}`"></p>
+            <p class="text-lg font-bold text-amber-900" x-text="`Skor ${new Intl.NumberFormat('id-ID').format(livePlayerScore)}`"></p>
             <a href="{{ route('leaderboard') }}" class="mt-1 inline-block text-lg font-bold text-orange-600 underline">
                 Leaderboard
             </a>
@@ -86,7 +92,7 @@
                 >
                     <div class="mb-4 flex items-center justify-between">
                         <p class="text-3xl font-extrabold text-amber-900" x-text="challenge.prompt"></p>
-                        <p class="text-xl font-bold text-orange-700">Progress {{ $correctCount }}/3</p>
+                        <p class="text-xl font-bold text-orange-700" x-text="`Progress ${liveCorrectCount}/3`"></p>
                     </div>
 
                     <template x-if="challenge.engine === 'tap_collector'">

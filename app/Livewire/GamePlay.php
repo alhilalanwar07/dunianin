@@ -19,6 +19,8 @@ class GamePlay extends Component
 
     public int $playerLevel = 1;
 
+    public int $playerScore = 0;
+
     public int $correctCount = 0;
 
     public array $recentQuestionIds = [];
@@ -34,6 +36,7 @@ class GamePlay extends Component
         }
 
         $this->playerLevel = $player->current_level;
+        $this->playerScore = $player->total_score;
         $this->correctCount = PlayerQuestionLog::query()
             ->where('player_id', $player->id)
             ->where('level_saat_main', $this->playerLevel)
@@ -166,6 +169,7 @@ class GamePlay extends Component
 
         $player->last_active_at = now();
         $player->save();
+        $this->playerScore = $player->total_score;
 
         SendTelegramNotification::dispatch(
             '[OK] ' . $player->username . ' | ' . ($this->currentChallenge['engine'] ?? 'unknown')

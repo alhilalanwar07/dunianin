@@ -7,6 +7,8 @@ use Livewire\Component;
 
 class Leaderboard extends Component
 {
+    public int $refreshSeconds = 2;
+
     public function render()
     {
         return view('livewire.leaderboard', [
@@ -16,6 +18,7 @@ class Leaderboard extends Component
                 ->limit(10)
                 ->get(),
             'currentPlayerId' => session('player_id'),
+            'updatedAt' => now()->format('H:i:s'),
         ])->layout('layouts.app', ['title' => 'Leaderboard - Dunia Anin']);
     }
 }

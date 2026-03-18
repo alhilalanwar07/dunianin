@@ -23,7 +23,7 @@
             <p class="mt-3 text-2xl font-semibold text-orange-700">Siapa namamu?</p>
 
             <input
-                wire:model.defer="username"
+                wire:model.live.debounce.250ms="username"
                 type="text"
                 maxlength="50"
                 class="mt-6 h-16 w-full rounded-2xl border-2 border-amber-300 bg-white px-5 text-2xl text-amber-900 outline-none focus:border-orange-500"

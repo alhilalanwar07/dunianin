@@ -13,6 +13,13 @@ class PlayerSession extends Component
 
     public bool $isCheckingSession = true;
 
+    protected function rules(): array
+    {
+        return [
+            'username' => ['required', 'string', 'min:2', 'max:50', 'unique:players,username'],
+        ];
+    }
+
     public function render()
     {
         return view('livewire.player-session')
@@ -47,9 +54,7 @@ class PlayerSession extends Component
 
     public function register(): void
     {
-        $validated = $this->validate([
-            'username' => ['required', 'string', 'min:2', 'max:50', 'unique:players,username'],
-        ]);
+        $validated = $this->validate();
 
         $sessionToken = (string) Str::uuid();
 
@@ -74,5 +79,10 @@ class PlayerSession extends Component
         )->onQueue('telegram');
 
         $this->redirectRoute('game.play', navigate: true);
+    }
+
+    public function updatedUsername(): void
+    {
+        $this->validateOnly('username');
     }
 }

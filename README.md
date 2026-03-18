@@ -14,6 +14,8 @@ Game edukasi anak usia <= 7 tahun dengan pendekatan SDUI berbasis Laravel + Live
 ## Fitur Utama (saat ini)
 - Session pemain tanpa login tradisional (username + token localStorage)
 - Two-state UI: level map dan game arena tanpa page reload
+- Realtime binding dengan Livewire .live pada input dan HUD gameplay
+- Leaderboard realtime dengan auto-refresh periodik
 - Tiga engine game v1:
 	- tap_collector
 	- macro_dnd
@@ -121,10 +123,11 @@ Ruang lingkup test saat ini mencakup:
 
 ## Alur Pakai Singkat
 1. Buka aplikasi pada route root.
-2. Isi username pada layar awal.
+2. Isi username pada layar awal, validasi tampil realtime saat mengetik.
 3. Masuk ke map level, klik node level aktif.
-4. Mainkan challenge sampai 3 kali benar untuk naik level.
+4. Mainkan challenge sampai 3 kali benar untuk naik level, HUD level/skor/progress update realtime.
 5. Cek ranking di halaman leaderboard.
+6. Leaderboard akan auto-refresh tiap beberapa detik untuk menampilkan ranking terbaru.
 
 ## Catatan Update README
 Setiap selesai update fitur, README ini harus ikut diperbarui agar:
@@ -139,3 +142,6 @@ Setiap selesai update fitur, README ini harus ikut diperbarui agar:
 - Menambahkan game:status untuk ringkasan operasional.
 - Menambahkan test skenario jawaban salah tetap level dan skor.
 - Menambahkan polish map connector dan transisi visual arena pada iterasi sebelumnya.
+- Mengaktifkan Livewire .live untuk realtime pada input username dan HUD gameplay (level, skor, progress).
+- Menambahkan leaderboard realtime dengan polling periodik pada Livewire.
+- Menambahkan test command game:status agar monitoring CLI tervalidasi.
