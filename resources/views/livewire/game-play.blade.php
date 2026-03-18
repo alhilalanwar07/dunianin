@@ -37,9 +37,9 @@
         </div>
     </header>
 
-    <div class="flex-1 min-h-0 pt-20 min-[520px]:pt-24 sm:pt-28">
+    <div class="flex flex-1 flex-col min-h-0 pt-20 min-[520px]:pt-24 sm:pt-28">
         @if ($statusMessage)
-            <div class="mx-3 mb-2 rounded-2xl bg-emerald-100 px-3 py-2 text-sm font-bold text-emerald-700 sm:mx-6 sm:mb-3 sm:px-4 sm:text-lg">
+            <div class="mx-3 mb-2 shrink-0 rounded-2xl bg-emerald-100 px-3 py-2 text-sm font-bold text-emerald-700 sm:mx-6 sm:mb-3 sm:px-4 sm:text-lg">
                 {{ $statusMessage }}
             </div>
         @endif
