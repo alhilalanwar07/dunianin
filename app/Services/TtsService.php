@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class TtsService
 {
@@ -14,8 +14,15 @@ class TtsService
     public static function generate(string $text): ?string
     {
         $filename = 'voices/' . md5($text) . '.mp3';
+        $publicRelativePath = 'storage/' . $filename;
+        $publicAbsolutePath = public_path($publicRelativePath);
 
-        // Jika sudah pernah di-generate, return cache URL-nya
+        // Prioritas: file yang langsung ada di public/storage (cocok untuk hosting tanpa symlink)
+        if (is_file($publicAbsolutePath)) {
+            return asset($publicRelativePath);
+        }
+
+        // Fallback: file dari disk public Laravel (cocok jika storage:link tersedia)
         if (Storage::disk('public')->exists($filename)) {
             return Storage::url($filename);
         }
@@ -31,7 +38,21 @@ class TtsService
             ]);
 
             if ($response->successful()) {
-                Storage::disk('public')->put($filename, $response->body());
+                $audioBinary = $response->body();
+
+                // Simpan langsung ke public/storage agar tidak butuh fungsi symlink() di shared hosting
+                $publicDir = dirname($publicAbsolutePath);
+                if (! is_dir($publicDir)) {
+                    mkdir($publicDir, 0775, true);
+                }
+
+                if (@file_put_contents($publicAbsolutePath, $audioBinary) !== false) {
+                    return asset($publicRelativePath);
+                }
+
+                // Fallback terakhir ke disk public Laravel jika direct write gagal
+                Storage::disk('public')->put($filename, $audioBinary);
+
                 return Storage::url($filename);
             }
 
