@@ -103,12 +103,12 @@
                     </div>
 
                     <!-- Success Overlay -->
-                    <div x-show="visualState === 'success_dialog'" style="display: none;" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100" class="absolute inset-0 z-40 flex flex-col items-center justify-center bg-emerald-500/95 backdrop-blur-sm">
-                        <div class="mb-6 animate-bounce">
-                            <x-svg-icon name="centang" class="h-32 w-32 text-white drop-shadow-md" />
+                    <div x-show="visualState === 'success_dialog'" style="display: none;" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100" class="absolute inset-0 z-40 flex flex-col items-center justify-center p-4 bg-emerald-500/95 backdrop-blur-sm overflow-y-auto">
+                        <div class="mb-2 sm:mb-6 animate-bounce mt-auto sm:mt-0">
+                            <x-svg-icon name="centang" class="h-20 w-20 sm:h-32 sm:w-32 text-white drop-shadow-md" />
                         </div>
-                        <h2 class="mb-8 text-center text-4xl font-extrabold text-white drop-shadow-md">Hebat!<br>Jawabanmu Benar</h2>
-                        <button type="button" @click="if(!busy) { busy = true; $wire.challengeSelesai(challenge.question_id, true, elapsed()); }" class="touch-target rounded-full bg-white px-8 py-4 text-2xl font-extrabold text-emerald-600 shadow-xl transition hover:scale-105 active:scale-95 outline-none pointer-events-auto">
+                        <h2 class="mb-4 sm:mb-8 text-center text-3xl sm:text-4xl font-extrabold text-white drop-shadow-md">Hebat!<br>Jawabanmu Benar</h2>
+                        <button type="button" @click="if(!busy) { busy = true; $wire.challengeSelesai(challenge.question_id, true, elapsed()); }" class="touch-target rounded-full bg-white px-6 py-3 sm:px-8 sm:py-4 text-xl sm:text-2xl font-extrabold text-emerald-600 shadow-xl transition hover:scale-105 active:scale-95 outline-none pointer-events-auto mb-auto sm:mb-0">
                             Lanjut
                         </button>
                     </div>
