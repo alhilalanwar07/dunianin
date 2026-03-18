@@ -18,6 +18,42 @@
                 this.audioPlayer.src = url;
                 this.audioPlayer.play().catch(e => console.log('Audio play failed:', e));
             }
+        },
+        speakFallback(text) {
+            if (!this.audioUnlocked || !window.speechSynthesis || !text) {
+                return;
+            }
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID';
+            utterance.rate = 0.95;
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(utterance);
+        },
+        unlockAudio() {
+            this.audioUnlocked = true;
+
+            // Prime audio pipeline on user gesture for stricter mobile browsers
+            this.audioPlayer.muted = true;
+            this.audioPlayer.src = 'data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAA';
+            this.audioPlayer.play().catch(() => {});
+            this.audioPlayer.pause();
+            this.audioPlayer.currentTime = 0;
+            this.audioPlayer.muted = false;
+
+            this.speakFallback('Suara aktif. Selamat bermain.');
+        },
+        playChallengeAudio(challenge) {
+            if (!this.audioUnlocked || !challenge) {
+                return;
+            }
+
+            if (challenge.payload && challenge.payload.audio_url) {
+                this.playInstruction(challenge.payload.audio_url);
+                return;
+            }
+
+            this.speakFallback(challenge.prompt || challenge?.payload?.prompt || 'Ayo mulai tantangannya');
         }
     }"
     x-on:level-up-animation.window="
@@ -32,7 +68,7 @@
     <div x-show="!audioUnlocked" class="absolute inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-amber-200/95 p-6 text-center backdrop-blur-sm">
         <h1 class="text-4xl font-black text-amber-900 drop-shadow-sm sm:text-6xl">Siap Bermain?</h1>
         <p class="text-lg font-bold text-amber-700 sm:text-2xl">Buka suara biar makin seru!</p>
-        <button type="button" @click="audioUnlocked = true" class="touch-target mt-4 animate-bounce rounded-full border-b-8 border-orange-600 bg-orange-500 px-10 py-5 text-2xl font-black tracking-widest text-white shadow-2xl transition-all active:translate-y-2 active:border-b-0 sm:px-14 sm:py-6 sm:text-4xl">
+        <button type="button" @click="unlockAudio()" class="touch-target mt-4 animate-bounce rounded-full border-b-8 border-orange-600 bg-orange-500 px-10 py-5 text-2xl font-black tracking-widest text-white shadow-2xl transition-all active:translate-y-2 active:border-b-0 sm:px-14 sm:py-6 sm:text-4xl">
             ▶ MULAI MAIN
         </button>
     </div>
@@ -281,9 +317,7 @@
                     }
 
                     // Play audio dynamically when arena starts
-                    if (this.challenge.payload.audio_url) {
-                        this.$dispatch('play-audio', this.challenge.payload.audio_url);
-                    }
+                    this.$root.playChallengeAudio(this.challenge);
                 },
 
                 elapsed() {

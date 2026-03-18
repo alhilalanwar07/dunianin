@@ -8,6 +8,7 @@ use App\Models\Player;
 use App\Models\PlayerQuestionLog;
 use App\Models\Question;
 use App\Services\ChallengePayloadFactory;
+use App\Services\TtsService;
 use Illuminate\Support\Arr;
 use Livewire\Component;
 
@@ -96,6 +97,15 @@ class GamePlay extends Component
         }
 
         $payload = $question->payload;
+
+        if (! empty($payload['prompt']) && empty($payload['audio_url'])) {
+            $audioUrl = TtsService::generate($payload['prompt']);
+
+            if ($audioUrl) {
+                $payload['audio_url'] = $audioUrl;
+                $question->update(['payload' => $payload]);
+            }
+        }
 
         $this->currentChallenge = [
             'question_id' => $question->id,

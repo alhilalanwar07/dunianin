@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Storage;
 
 class TtsService
 {
+    private static function publicUrl(string $relativePath): string
+    {
+        return '/' . ltrim($relativePath, '/');
+    }
+
     /**
      * Hit undocumented Google Translate TTS API, save to storage, return URL.
      */
@@ -19,7 +24,7 @@ class TtsService
 
         // Prioritas: file yang langsung ada di public/storage (cocok untuk hosting tanpa symlink)
         if (is_file($publicAbsolutePath)) {
-            return asset($publicRelativePath);
+            return self::publicUrl($publicRelativePath);
         }
 
         // Fallback: file dari disk public Laravel (cocok jika storage:link tersedia)
@@ -47,7 +52,7 @@ class TtsService
                 }
 
                 if (@file_put_contents($publicAbsolutePath, $audioBinary) !== false) {
-                    return asset($publicRelativePath);
+                    return self::publicUrl($publicRelativePath);
                 }
 
                 // Fallback terakhir ke disk public Laravel jika direct write gagal
