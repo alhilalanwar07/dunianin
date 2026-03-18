@@ -117,67 +117,82 @@
                     </div>
 
                     <template x-if="challenge.engine === 'tap_collector'">
-                        <div class="grid flex-1 grid-cols-5 gap-4">
+                        <div class="flex flex-1 flex-wrap items-center justify-center gap-6 p-4 perspective-1000">
                             @for ($i = 0; $i < ($currentChallenge['payload']['spawn_count'] ?? 3); $i++)
                                 <button
-                                    class="touch-target flex items-center justify-center rounded-3xl bg-white shadow transition"
+                                    class="touch-target relative flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-sky-300 to-indigo-400 shadow-[0_10px_20px_rgba(0,0,0,0.2)] transition-all duration-300"
                                     @click="tap({{ $i }})"
                                     :disabled="items[{{ $i }}]?.done"
-                                    :class="items[{{ $i }}]?.done ? 'opacity-30 scale-90' : 'hover:scale-105'"
+                                    :class="items[{{ $i }}]?.done 
+                                        ? 'opacity-0 scale-50 -translate-y-20 rotate-180 pointer-events-none' 
+                                        : 'hover:scale-110 hover:-rotate-12 active:scale-95 animate-pulse-glow'"
+                                    style="animation-delay: {{ $i * 200 }}ms; transform-style: preserve-3d;"
                                 >
-                                    <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-16 w-16 text-sky-500" />
+                                    <div class="pointer-events-none absolute inset-0 rounded-full border-4 border-white/40"></div>
+                                    <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-20 w-20 text-white drop-shadow-xl transition-transform" :class="items[{{ $i }}]?.done ? '' : 'animate-bounce'" style="animation-delay: {{ $i * 150 }}ms" />
                                 </button>
                             @endfor
                         </div>
                     </template>
 
                     <template x-if="challenge.engine === 'macro_dnd'">
-                        <div class="flex flex-1 gap-5">
-                            <div class="grid w-3/5 grid-cols-3 gap-4 rounded-3xl bg-white p-4">
+                        <div class="flex flex-1 flex-col gap-6 md:flex-row p-2">
+                            <div class="flex w-full md:w-3/5 flex-wrap items-center justify-center gap-6 rounded-[2rem] bg-white/50 p-6 shadow-inner" style="min-height: 280px;">
                                 @for ($i = 0; $i < ($currentChallenge['payload']['spawn_count'] ?? 3); $i++)
                                     <div
-                                        class="touch-target flex items-center justify-center rounded-2xl bg-orange-100"
+                                        class="touch-target flex h-28 w-28 cursor-grab items-center justify-center rounded-3xl bg-gradient-to-br from-violet-400 to-fuchsia-400 shadow-xl transition-all duration-300 hover:scale-110 hover:-rotate-6 active:cursor-grabbing active:scale-95"
                                         draggable="true"
                                         @dragstart="drag({{ $i }})"
                                         x-show="!items[{{ $i }}]?.done"
+                                        x-transition:leave="transition ease-in duration-300"
+                                        x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                        x-transition:leave-end="opacity-0 scale-50 translate-y-10"
                                     >
-                                        <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-16 w-16 text-violet-500" />
+                                        <div class="pointer-events-none absolute inset-0 rounded-3xl border-4 border-white/30"></div>
+                                        <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-20 w-20 text-white drop-shadow-lg" />
                                     </div>
                                 @endfor
                             </div>
 
                             <div
-                                class="flex w-2/5 items-center justify-center rounded-3xl border-4 border-dashed border-amber-400 bg-amber-100"
+                                class="flex w-full md:w-2/5 items-center justify-center rounded-[2rem] border-8 border-dashed border-amber-400 bg-amber-100/50 p-6 shadow-lg transition-all duration-300"
+                                :class="draggedIndex !== null ? 'scale-[1.02] border-amber-500 bg-amber-200/80 shadow-2xl animate-pulse' : ''"
                                 @dragover.prevent
                                 @drop.prevent="drop()"
                             >
-                                <div class="text-center">
-                                    <x-svg-icon name="keranjang" class="mx-auto h-24 w-24 text-orange-500" />
-                                    <p class="mt-3 text-2xl font-extrabold text-amber-900">Taruh di sini</p>
+                                <div class="text-center transition-transform duration-300" :class="draggedIndex !== null ? 'scale-110' : ''">
+                                    <div class="mx-auto flex h-40 w-40 items-center justify-center rounded-full bg-white/50 shadow-inner mb-4">
+                                        <x-svg-icon name="keranjang" class="h-28 w-28 text-orange-500 drop-shadow-md" />
+                                    </div>
+                                    <p class="text-3xl font-extrabold text-amber-900 drop-shadow-sm" x-text="draggedIndex !== null ? 'Lepaskan!' : 'Taruh di sini'"></p>
                                 </div>
                             </div>
                         </div>
                     </template>
 
                     <template x-if="challenge.engine === 'binary_choice'">
-                        <div class="flex flex-1 gap-4">
-                            <button class="flex-1 rounded-3xl bg-white p-4 shadow transition" @click="choose('left')" :class="wrongChoice === 'left' ? 'animate-shake ring-4 ring-rose-300' : ''">
-                                <p class="mb-3 text-xl font-bold text-orange-700">KIRI</p>
-                                <div class="grid grid-cols-4 gap-2">
+                        <div class="flex flex-1 flex-col gap-6 md:flex-row p-2">
+                            <button class="group flex-1 rounded-[2.5rem] bg-gradient-to-b from-rose-100 to-rose-200 p-8 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-4 hover:shadow-rose-400/50 active:scale-95" 
+                                @click="choose('left')" 
+                                :class="wrongChoice === 'left' ? 'animate-shake ring-8 ring-rose-400 bg-rose-300' : ''">
+                                <p class="mb-6 inline-block rounded-full bg-rose-500 px-8 py-3 text-2xl font-black tracking-widest text-white shadow-lg">KIRI</p>
+                                <div class="flex flex-wrap items-center justify-center gap-4">
                                     @for ($i = 0; $i < ($currentChallenge['payload']['left_count'] ?? 2); $i++)
-                                        <div class="flex items-center justify-center rounded-xl bg-orange-100 p-2">
-                                            <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-10 w-10 text-rose-500" />
+                                        <div class="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-md transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
+                                            <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-12 w-12 text-rose-500 drop-shadow-sm" />
                                         </div>
                                     @endfor
                                 </div>
                             </button>
 
-                            <button class="flex-1 rounded-3xl bg-white p-4 shadow transition" @click="choose('right')" :class="wrongChoice === 'right' ? 'animate-shake ring-4 ring-rose-300' : ''">
-                                <p class="mb-3 text-xl font-bold text-orange-700">KANAN</p>
-                                <div class="grid grid-cols-4 gap-2">
+                            <button class="group flex-1 rounded-[2.5rem] bg-gradient-to-b from-emerald-100 to-emerald-200 p-8 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-4 hover:shadow-emerald-400/50 active:scale-95" 
+                                @click="choose('right')" 
+                                :class="wrongChoice === 'right' ? 'animate-shake ring-8 ring-rose-400 bg-rose-300' : ''">
+                                <p class="mb-6 inline-block rounded-full bg-emerald-500 px-8 py-3 text-2xl font-black tracking-widest text-white shadow-lg">KANAN</p>
+                                <div class="flex flex-wrap items-center justify-center gap-4">
                                     @for ($i = 0; $i < ($currentChallenge['payload']['right_count'] ?? 3); $i++)
-                                        <div class="flex items-center justify-center rounded-xl bg-orange-100 p-2">
-                                            <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-10 w-10 text-emerald-500" />
+                                        <div class="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-md transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-110">
+                                            <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-12 w-12 text-emerald-500 drop-shadow-sm" />
                                         </div>
                                     @endfor
                                 </div>
