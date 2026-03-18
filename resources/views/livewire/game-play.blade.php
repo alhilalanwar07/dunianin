@@ -22,7 +22,7 @@
         <div class="text-right">
             <p class="text-lg font-bold text-orange-700" x-text="`Level ${livePlayerLevel}`"></p>
             <p class="text-lg font-bold text-amber-900" x-text="`Skor ${new Intl.NumberFormat('id-ID').format(livePlayerScore)}`"></p>
-            <a href="{{ route('leaderboard') }}" class="mt-1 inline-block text-lg font-bold text-orange-600 underline">
+            <a href="{{ route('leaderboard') }}" wire:navigate class="mt-1 inline-block text-lg font-bold text-orange-600 underline transition hover:text-orange-800">
                 Leaderboard
             </a>
         </div>
@@ -35,7 +35,7 @@
     @endif
 
     @if ($state === 'map')
-        <section class="flex-1 overflow-y-auto p-6" x-ref="mapScroller">
+        <section wire:key="view-map" wire:transition.opacity.duration.300ms class="flex-1 overflow-y-auto p-6" x-ref="mapScroller">
             <div class="mx-auto flex max-w-3xl flex-col gap-6 pb-10">
                 @for ($level = 1; $level <= $playerLevel + 1; $level++)
                     @php
@@ -49,8 +49,10 @@
                     <div class="{{ $align }} w-64" style="margin-inline: {{ $level % 2 === 0 ? '2.5rem 0' : '0 2.5rem' }};">
                         <button
                             wire:click="masukArena({{ $level }})"
+                            wire:loading.class="opacity-60 scale-95"
+                            wire:target="masukArena({{ $level }})"
                             @if ($isActive) x-ref="activeNode" @endif
-                            class="touch-target flex w-full items-center justify-between rounded-3xl px-5 py-4 text-left shadow-lg transition
+                            class="touch-target relative flex w-full items-center justify-between overflow-hidden rounded-3xl px-5 py-4 text-left shadow-lg transition
                                 {{ $isCompleted ? 'bg-emerald-300 text-emerald-900' : '' }}
                                 {{ $isActive ? 'animate-pulse-glow bg-amber-400 text-amber-900 hover:scale-105' : '' }}
                                 {{ $isLocked ? 'bg-gray-300 text-gray-600 pointer-events-none' : '' }}"
@@ -77,19 +79,27 @@
     @endif
 
     @if ($state === 'arena')
-        <section class="flex-1 p-5">
+        <section wire:key="view-arena" wire:transition.scale.duration.300ms class="flex-1 p-5">
             @if ($currentChallenge)
                 <div
                     wire:key="arena-{{ $currentChallenge['instance_key'] ?? $currentChallenge['question_id'] }}"
                     x-data="gameArena(@js($currentChallenge))"
                     x-init="start($wire)"
-                    class="flex h-full flex-col rounded-3xl bg-orange-50 p-5 shadow-lg transition"
+                    class="relative flex h-full flex-col overflow-hidden rounded-3xl bg-orange-50 p-5 shadow-lg transition"
                     :class="{
                         'animate-fade-in': visualState === 'playing',
                         'ring-4 ring-emerald-300': visualState === 'correct',
                         'animate-shake ring-4 ring-rose-300': visualState === 'wrong'
                     }"
                 >
+                    <!-- Loading Overlay -->
+                    <div wire:loading.flex wire:target="challengeSelesai, kembaliKeMap" class="absolute inset-0 z-50 flex items-center justify-center bg-white/60 backdrop-blur-sm">
+                        <div class="animate-bounce">
+                            <x-svg-icon name="mahkota" class="mx-auto h-20 w-20 text-orange-500" />
+                            <p class="mt-4 font-bold text-orange-600">Memuat...</p>
+                        </div>
+                    </div>
+
                     <div class="mb-4 flex items-center justify-between">
                         <p class="text-3xl font-extrabold text-amber-900" x-text="challenge.prompt"></p>
                         <p class="text-xl font-bold text-orange-700" x-text="`Progress ${liveCorrectCount}/3`"></p>
