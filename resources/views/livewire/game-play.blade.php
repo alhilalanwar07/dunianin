@@ -5,7 +5,12 @@
         levelUpText: '',
         livePlayerLevel: $wire.entangle('playerLevel').live,
         livePlayerScore: $wire.entangle('playerScore').live,
-        liveCorrectCount: $wire.entangle('correctCount').live
+        liveCorrectCount: $wire.entangle('correctCount').live,
+        scrollMapToTop() {
+            if (this.$refs.mapScroller) {
+                this.$refs.mapScroller.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
     }"
     x-on:level-up-animation.window="
         levelUpText = `LEVEL ${$event.detail.level}!`;
@@ -40,8 +45,13 @@
         @endif
 
     @if ($state === 'map')
-        <section wire:key="view-map" wire:transition.opacity.duration.300ms class="flex-1 overflow-y-auto px-2 pb-4 pt-2 min-[520px]:px-3 sm:px-5" x-ref="mapScroller">
+        <section wire:key="view-map" wire:transition.opacity.duration.300ms class="flex-1 touch-pan-y overflow-y-auto overscroll-y-contain px-2 pb-4 pt-2 [-webkit-overflow-scrolling:touch] min-[520px]:px-3 sm:px-5" x-ref="mapScroller">
             <div class="mx-auto w-full max-w-4xl rounded-3xl border border-orange-100/80 bg-gradient-to-b from-orange-50 via-amber-50 to-orange-100/30 p-3 shadow-[0_14px_34px_rgba(217,119,6,0.14)] sm:rounded-[2rem] sm:p-4">
+                <div class="sticky top-0 z-20 mb-2 flex justify-center sm:justify-end">
+                    <button type="button" @click="scrollMapToTop()" class="touch-target rounded-full border border-orange-300/80 bg-white/90 px-3 py-1 text-sm font-extrabold text-orange-700 shadow-sm backdrop-blur transition hover:bg-white sm:px-4 sm:py-1.5 sm:text-base">
+                        Ke Level 1
+                    </button>
+                </div>
                 <div class="relative mx-auto flex max-w-3xl flex-col gap-2 pb-2 sm:gap-3">
                     <div class="pointer-events-none absolute inset-y-0 left-1/2 w-1 -translate-x-1/2 rounded-full bg-gradient-to-b from-emerald-300 via-amber-300 to-gray-300/70 opacity-40"></div>
                 @for ($level = 1; $level <= $playerLevel + 1; $level++)

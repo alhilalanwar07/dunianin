@@ -68,7 +68,6 @@ class GamePlay extends Component
     public function kembaliKeMap(): void
     {
         $this->state = 'map';
-        $this->dispatch('map-focus-active');
     }
 
     public function ambilChallengeBaru(): void
