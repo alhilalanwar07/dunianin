@@ -100,6 +100,17 @@
                         </div>
                     </div>
 
+                    <!-- Success Overlay -->
+                    <div x-show="visualState === 'success_dialog'" style="display: none;" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100" class="absolute inset-0 z-40 flex flex-col items-center justify-center bg-emerald-500/95 backdrop-blur-sm">
+                        <div class="mb-6 animate-bounce">
+                            <x-svg-icon name="centang" class="h-32 w-32 text-white drop-shadow-md" />
+                        </div>
+                        <h2 class="mb-8 text-center text-4xl font-extrabold text-white drop-shadow-md">Hebat!<br>Jawabanmu Benar</h2>
+                        <button @click="lanjutKeBerikutnya()" class="touch-target rounded-full bg-white px-8 py-4 text-2xl font-extrabold text-emerald-600 shadow-xl transition hover:scale-105 active:scale-95 outline-none">
+                            Lanjut
+                        </button>
+                    </div>
+
                     <div class="mb-4 flex items-center justify-between">
                         <p class="text-3xl font-extrabold text-amber-900" x-text="challenge.prompt"></p>
                         <p class="text-xl font-bold text-orange-700" x-text="`Progress ${liveCorrectCount}/3`"></p>
@@ -199,6 +210,7 @@
                 items: [],
                 draggedIndex: null,
                 startedAt: Date.now(),
+                finalTime: null,
                 wire: null,
                 busy: false,
                 visualState: 'playing',
@@ -207,6 +219,7 @@
                 start(wire) {
                     this.wire = wire;
                     this.startedAt = Date.now();
+                    this.finalTime = null;
 
                     if (this.challenge.engine === 'tap_collector' || this.challenge.engine === 'macro_dnd') {
                         const total = this.challenge.payload.spawn_count || 3;
@@ -215,6 +228,9 @@
                 },
 
                 elapsed() {
+                    if (this.finalTime !== null) {
+                        return this.finalTime;
+                    }
                     return Math.max(1, Date.now() - this.startedAt);
                 },
 
@@ -224,11 +240,13 @@
                     }
 
                     this.busy = true;
+                    this.finalTime = this.elapsed();
 
                     if (isCorrect) {
                         this.visualState = 'correct';
                         setTimeout(() => {
-                            this.wire.challengeSelesai(this.challenge.question_id, true, this.elapsed());
+                            this.visualState = 'success_dialog';
+                            this.busy = false;
                         }, 450);
 
                         return;
@@ -236,8 +254,18 @@
 
                     this.visualState = 'wrong';
                     setTimeout(() => {
-                        this.wire.challengeSelesai(this.challenge.question_id, false, this.elapsed());
+                        this.wire.challengeSelesai(this.challenge.question_id, false, this.elapsed())
+                                .finally(() => { this.busy = false; });
                     }, 650);
+                },
+
+                lanjutKeBerikutnya() {
+                    if (this.busy) {
+                        return;
+                    }
+                    this.busy = true;
+                    this.wire.challengeSelesai(this.challenge.question_id, true, this.elapsed())
+                        .finally(() => { this.busy = false; });
                 },
 
                 tap(index) {
