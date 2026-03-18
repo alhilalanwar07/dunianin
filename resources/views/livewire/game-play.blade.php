@@ -40,47 +40,50 @@
         @endif
 
     @if ($state === 'map')
-        <section wire:key="view-map" wire:transition.opacity.duration.300ms class="flex-1 overflow-y-auto p-3 sm:p-6" x-ref="mapScroller">
-            <div class="mx-auto flex max-w-3xl flex-col gap-4 pb-8 sm:gap-6 sm:pb-10">
+        <section wire:key="view-map" wire:transition.opacity.duration.300ms class="flex-1 overflow-y-auto px-2 pb-4 pt-2 min-[520px]:px-3 sm:px-5" x-ref="mapScroller">
+            <div class="mx-auto w-full max-w-4xl rounded-3xl border border-orange-100/80 bg-gradient-to-b from-orange-50 via-amber-50 to-orange-100/30 p-3 shadow-[0_14px_34px_rgba(217,119,6,0.14)] sm:rounded-[2rem] sm:p-4">
+                <div class="relative mx-auto flex max-w-3xl flex-col gap-2 pb-2 sm:gap-3">
+                    <div class="pointer-events-none absolute inset-y-0 left-1/2 w-1 -translate-x-1/2 rounded-full bg-gradient-to-b from-emerald-300 via-amber-300 to-gray-300/70 opacity-40"></div>
                 @for ($level = 1; $level <= $playerLevel + 1; $level++)
                     @php
                         $isCompleted = $level < $playerLevel;
                         $isActive = $level === $playerLevel;
                         $isLocked = $level > $playerLevel;
-                        $align = $level % 2 === 0
-                            ? 'self-end mr-1 sm:mr-10'
-                            : 'self-start ml-1 sm:ml-10';
+                        $rowAlign = $level % 2 === 0 ? 'justify-end' : 'justify-start';
                         $connectorDone = $level < $playerLevel;
                     @endphp
 
-                    <div class="{{ $align }} w-full max-w-56 sm:max-w-64">
-                        <button
-                            wire:click="masukArena({{ $level }})"
-                            wire:loading.class="opacity-60 scale-95"
-                            wire:target="masukArena({{ $level }})"
-                            @if ($isActive) x-ref="activeNode" @endif
-                            class="touch-target relative flex w-full items-center justify-between overflow-hidden rounded-2xl px-4 py-3 text-left shadow-lg transition sm:rounded-3xl sm:px-5 sm:py-4
-                                {{ $isCompleted ? 'bg-emerald-300 text-emerald-900' : '' }}
-                                {{ $isActive ? 'animate-pulse-glow bg-amber-400 text-amber-900 hover:scale-105' : '' }}
-                                {{ $isLocked ? 'bg-gray-300 text-gray-600 pointer-events-none' : '' }}"
-                        >
-                            <span class="text-xl font-extrabold sm:text-2xl">Level {{ $level }}</span>
-                            <span>
-                                @if ($isCompleted)
-                                    <x-svg-icon name="centang" class="h-8 w-8 text-emerald-700 sm:h-10 sm:w-10" />
-                                @elseif ($isActive)
-                                    <x-svg-icon name="mahkota" class="h-8 w-8 text-orange-500 sm:h-10 sm:w-10" />
-                                @else
-                                    <x-svg-icon name="gembok" class="h-8 w-8 text-gray-500 sm:h-10 sm:w-10" />
-                                @endif
-                            </span>
-                        </button>
+                    <div class="relative flex w-full {{ $rowAlign }}">
+                        <div class="z-10 w-[min(82%,21rem)] min-[520px]:w-[min(70%,23rem)]">
+                            <button
+                                wire:click="masukArena({{ $level }})"
+                                wire:loading.class="opacity-60 scale-95"
+                                wire:target="masukArena({{ $level }})"
+                                @if ($isActive) x-ref="activeNode" @endif
+                                class="touch-target group relative flex w-full items-center justify-between overflow-hidden rounded-2xl border px-4 py-3 text-left shadow-md transition-all duration-300 sm:rounded-3xl sm:px-5 sm:py-4
+                                    {{ $isCompleted ? 'border-emerald-400/70 bg-emerald-300 text-emerald-900 shadow-emerald-300/30' : '' }}
+                                    {{ $isActive ? 'animate-pulse-glow border-amber-500 bg-amber-400 text-amber-900 shadow-[0_10px_28px_rgba(251,191,36,0.45)] hover:scale-[1.02]' : '' }}
+                                    {{ $isLocked ? 'pointer-events-none border-gray-300 bg-gray-300 text-gray-600 shadow-gray-300/30' : '' }}"
+                            >
+                                <span class="text-lg font-extrabold leading-none min-[520px]:text-xl sm:text-2xl">Level {{ $level }}</span>
+                                <span class="rounded-full bg-white/50 p-1.5 sm:p-2">
+                                    @if ($isCompleted)
+                                        <x-svg-icon name="centang" class="h-6 w-6 text-emerald-700 min-[520px]:h-7 min-[520px]:w-7 sm:h-9 sm:w-9" />
+                                    @elseif ($isActive)
+                                        <x-svg-icon name="mahkota" class="h-6 w-6 text-orange-500 min-[520px]:h-7 min-[520px]:w-7 sm:h-9 sm:w-9" />
+                                    @else
+                                        <x-svg-icon name="gembok" class="h-6 w-6 text-gray-500 min-[520px]:h-7 min-[520px]:w-7 sm:h-9 sm:w-9" />
+                                    @endif
+                                </span>
+                            </button>
+                        </div>
 
                         @if ($level < ($playerLevel + 1))
-                            <div class="mx-auto my-2 h-14 w-2 rounded-full {{ $connectorDone ? 'bg-emerald-300' : 'bg-gray-300' }}"></div>
+                            <div class="pointer-events-none absolute left-1/2 top-full z-0 mt-1 h-8 w-1.5 -translate-x-1/2 rounded-full {{ $connectorDone ? 'bg-emerald-300' : 'bg-gray-300' }} sm:h-10"></div>
                         @endif
                     </div>
                 @endfor
+                </div>
             </div>
         </section>
     @endif
