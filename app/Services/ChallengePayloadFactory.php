@@ -9,7 +9,7 @@ class ChallengePayloadFactory
         $assetPool = $assets ?: config('svg-assets.assets', ['apel', 'kucing', 'balon']);
         $maxSpawn = min(3 + intdiv($level, 2), 10);
 
-        return match ($engine) {
+        $payload = match ($engine) {
             'tap_collector' => [
                 'prompt' => 'Ketuk semua ' . $assetPool[array_rand($assetPool)] . '!',
                 'target_asset' => $assetPool[array_rand($assetPool)],
@@ -22,6 +22,13 @@ class ChallengePayloadFactory
             ],
             default => self::makeBinaryChoice($assetPool, $maxSpawn),
         };
+
+        // Generate TTS Audio silently for the prompt
+        if (isset($payload['prompt'])) {
+            $payload['audio_url'] = TtsService::generate($payload['prompt']);
+        }
+
+        return $payload;
     }
 
     private static function makeBinaryChoice(array $assetPool, int $maxSpawn): array

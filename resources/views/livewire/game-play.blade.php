@@ -3,12 +3,20 @@
     x-data="{
         showLevelUp: false,
         levelUpText: '',
+        audioUnlocked: false,
+        audioPlayer: new Audio(),
         livePlayerLevel: $wire.entangle('playerLevel').live,
         livePlayerScore: $wire.entangle('playerScore').live,
         liveCorrectCount: $wire.entangle('correctCount').live,
         scrollMapToTop() {
             if (this.$refs.mapScroller) {
                 this.$refs.mapScroller.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        },
+        playInstruction(url) {
+            if (this.audioUnlocked && url) {
+                this.audioPlayer.src = url;
+                this.audioPlayer.play().catch(e => console.log('Audio play failed:', e));
             }
         }
     }"
@@ -17,8 +25,18 @@
         showLevelUp = true;
         setTimeout(() => showLevelUp = false, 1800);
     "
+    x-on:play-audio.window="playInstruction($event.detail)"
     x-on:map-focus-active.window="$nextTick(() => { if ($refs.activeNode) { $refs.activeNode.scrollIntoView({ behavior: 'smooth', block: 'center' }); } })"
 >
+    <!-- Audio Unlock / Start Game Screen -->
+    <div x-show="!audioUnlocked" class="absolute inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-amber-200/95 p-6 text-center backdrop-blur-sm">
+        <h1 class="text-4xl font-black text-amber-900 drop-shadow-sm sm:text-6xl">Siap Bermain?</h1>
+        <p class="text-lg font-bold text-amber-700 sm:text-2xl">Buka suara biar makin seru!</p>
+        <button type="button" @click="audioUnlocked = true" class="touch-target mt-4 animate-bounce rounded-full border-b-8 border-orange-600 bg-orange-500 px-10 py-5 text-2xl font-black tracking-widest text-white shadow-2xl transition-all active:translate-y-2 active:border-b-0 sm:px-14 sm:py-6 sm:text-4xl">
+            ▶ MULAI MAIN
+        </button>
+    </div>
+
     <header class="pointer-events-none absolute inset-x-2 top-2 z-30 rounded-2xl border border-orange-200/80 bg-orange-50/90 px-3 py-2 shadow-md backdrop-blur-sm min-[520px]:inset-x-3 sm:inset-x-4 sm:rounded-3xl sm:px-4 sm:py-3">
         <div class="flex items-center justify-between gap-2">
             <div class="min-w-0">
@@ -260,6 +278,11 @@
                     if (this.challenge.engine === 'tap_collector' || this.challenge.engine === 'macro_dnd') {
                         const total = this.challenge.payload.spawn_count || 3;
                         this.items = Array.from({ length: total }, () => ({ done: false }));
+                    }
+
+                    // Play audio dynamically when arena starts
+                    if (this.challenge.payload.audio_url) {
+                        this.$dispatch('play-audio', this.challenge.payload.audio_url);
                     }
                 },
 
