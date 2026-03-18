@@ -129,7 +129,7 @@
                                     style="animation-delay: {{ $i * 200 }}ms; transform-style: preserve-3d;"
                                 >
                                     <div class="pointer-events-none absolute inset-0 rounded-full border-4 border-white/40"></div>
-                                    <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-20 w-20 text-white drop-shadow-xl transition-transform" :class="items[{{ $i }}]?.done ? '' : 'animate-bounce'" style="animation-delay: {{ $i * 150 }}ms" />
+                                    <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-20 w-20 text-white drop-shadow-xl transition-transform" x-bind:class="items[{{ $i }}]?.done ? '' : 'animate-bounce'" style="animation-delay: {{ $i * 150 }}ms" />
                                 </button>
                             @endfor
                         </div>
