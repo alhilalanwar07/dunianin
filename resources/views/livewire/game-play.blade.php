@@ -14,15 +14,17 @@
     "
     x-on:map-focus-active.window="$nextTick(() => { if ($refs.activeNode) { $refs.activeNode.scrollIntoView({ behavior: 'smooth', block: 'center' }); } })"
 >
-    <header class="flex items-center justify-between bg-orange-50 px-6 py-4 shadow-sm">
-        <div>
+    <header class="flex flex-col items-center justify-between gap-4 bg-orange-50 px-6 py-4 shadow-sm md:flex-row">
+        <div class="text-center md:text-left">
             <h1 class="text-3xl font-extrabold text-amber-900">Dunia Anin</h1>
             <p class="text-xl font-bold text-orange-700">Halo, {{ $player?->username ?? 'Pemain' }}</p>
         </div>
-        <div class="text-right">
-            <p class="text-lg font-bold text-orange-700" x-text="`Level ${livePlayerLevel}`"></p>
-            <p class="text-lg font-bold text-amber-900" x-text="`Skor ${new Intl.NumberFormat('id-ID').format(livePlayerScore)}`"></p>
-            <a href="{{ route('leaderboard') }}" wire:navigate class="mt-1 inline-block text-lg font-bold text-orange-600 underline transition hover:text-orange-800">
+        <div class="flex flex-col items-center gap-2 text-center md:items-end md:text-right">
+            <div class="flex gap-4">
+                <p class="text-lg font-bold text-orange-700" x-text="`Level ${livePlayerLevel}`"></p>
+                <p class="text-lg font-bold text-amber-900" x-text="`Skor ${new Intl.NumberFormat('id-ID').format(livePlayerScore)}`"></p>
+            </div>
+            <a href="{{ route('leaderboard') }}" wire:navigate class="inline-block text-lg font-bold text-orange-600 underline transition hover:text-orange-800">
                 Leaderboard
             </a>
         </div>
@@ -111,9 +113,9 @@
                         </button>
                     </div>
 
-                    <div class="mb-4 flex items-center justify-between">
-                        <p class="text-3xl font-extrabold text-amber-900" x-text="challenge.prompt"></p>
-                        <p class="text-xl font-bold text-orange-700" x-text="`Progress ${liveCorrectCount}/3`"></p>
+                    <div class="mb-4 flex flex-col items-center justify-between gap-2 md:flex-row md:gap-0">
+                        <p class="text-center text-3xl font-extrabold text-amber-900 md:text-left" x-text="challenge.prompt"></p>
+                        <p class="rounded-full bg-orange-200 px-4 py-1 text-xl font-bold text-orange-700" x-text="`Progress ${liveCorrectCount}/3`"></p>
                     </div>
 
                     <template x-if="challenge.engine === 'tap_collector'">
