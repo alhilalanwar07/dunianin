@@ -106,7 +106,7 @@
                             <x-svg-icon name="centang" class="h-32 w-32 text-white drop-shadow-md" />
                         </div>
                         <h2 class="mb-8 text-center text-4xl font-extrabold text-white drop-shadow-md">Hebat!<br>Jawabanmu Benar</h2>
-                        <button @click="lanjutKeBerikutnya()" class="touch-target rounded-full bg-white px-8 py-4 text-2xl font-extrabold text-emerald-600 shadow-xl transition hover:scale-105 active:scale-95 outline-none">
+                        <button type="button" @click="lanjutKeBerikutnya()" class="touch-target rounded-full bg-white px-8 py-4 text-2xl font-extrabold text-emerald-600 shadow-xl transition hover:scale-105 active:scale-95 outline-none">
                             Lanjut
                         </button>
                     </div>
@@ -253,19 +253,26 @@
                     }
 
                     this.visualState = 'wrong';
-                    setTimeout(() => {
-                        this.wire.challengeSelesai(this.challenge.question_id, false, this.elapsed())
-                                .finally(() => { this.busy = false; });
+                    setTimeout(async () => {
+                        try {
+                            await this.wire.challengeSelesai(this.challenge.question_id, false, this.elapsed());
+                        } catch (e) {
+                            this.busy = false;
+                        }
                     }, 650);
                 },
 
-                lanjutKeBerikutnya() {
+                async lanjutKeBerikutnya() {
                     if (this.busy) {
                         return;
                     }
                     this.busy = true;
-                    this.wire.challengeSelesai(this.challenge.question_id, true, this.elapsed())
-                        .finally(() => { this.busy = false; });
+                    try {
+                        await this.wire.challengeSelesai(this.challenge.question_id, true, this.elapsed());
+                    } catch (e) {
+                        this.busy = false;
+                        console.error('Error saat submit:', e);
+                    }
                 },
 
                 tap(index) {
