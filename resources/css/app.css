@@ -1,0 +1,216 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/livewire/livewire/src/**/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Baloo 2', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* ========================================
+   DUNIA ANIN — Landscape-Locked Game UI
+   Theme: Sunset (Amber/Orange)
+   ======================================== */
+
+/* Portrait Fallback — Force Landscape */
+.rotate-message {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #FFFBEB;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.rotate-message svg {
+    width: 80px;
+    height: 80px;
+    color: #F97316;
+    animation: rotate-phone 2s ease-in-out infinite;
+}
+
+.rotate-message p {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #78350F;
+}
+
+@keyframes rotate-phone {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-90deg); }
+    50% { transform: rotate(-90deg); }
+    75% { transform: rotate(0deg); }
+}
+
+@media (orientation: portrait) {
+    .game-container { display: none !important; }
+    .rotate-message { display: flex !important; }
+}
+
+/* ========================================
+   Game Animations
+   ======================================== */
+
+/* Tap response — scale down and fade */
+@keyframes tap-pop {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.8; }
+    100% { transform: scale(0); opacity: 0; }
+}
+
+/* Shake animation for wrong answers */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+    20%, 40%, 60%, 80% { transform: translateX(6px); }
+}
+
+/* Pulse glow for active level node */
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 24px rgba(251, 191, 36, 0.8);
+        transform: scale(1.08);
+    }
+}
+
+/* Bounce in for drop zone success */
+@keyframes bounce-in {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.1); }
+    70% { transform: scale(0.95); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Star burst for level up */
+@keyframes star-burst {
+    0% { transform: scale(0) rotate(0deg); opacity: 0; }
+    50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+    100% { transform: scale(1) rotate(360deg); opacity: 1; }
+}
+
+/* Fade transitions */
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-out {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-10px); }
+}
+
+/* Float animation for idle objects */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* Utility classes */
+.animate-tap-pop {
+    animation: tap-pop 0.4s ease-out forwards;
+}
+
+.animate-shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+.animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-bounce-in {
+    animation: bounce-in 0.5s ease-out;
+}
+
+.animate-star-burst {
+    animation: star-burst 0.8s ease-out forwards;
+}
+
+.animate-fade-in {
+    animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-fade-out {
+    animation: fade-out 0.3s ease-out forwards;
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Stagger delays for spawning objects */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.3s; }
+.stagger-7 { animation-delay: 0.35s; }
+.stagger-8 { animation-delay: 0.4s; }
+.stagger-9 { animation-delay: 0.45s; }
+.stagger-10 { animation-delay: 0.5s; }
+
+/* Touch-friendly defaults */
+.touch-target {
+    min-width: 56px;
+    min-height: 56px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+}
+
+/* Disable text selection globally for game area */
+.game-area {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/* Draggable object styles */
+.draggable {
+    cursor: grab;
+    touch-action: none;
+}
+
+.draggable.dragging {
+    cursor: grabbing;
+    z-index: 100;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+    transform: scale(1.1);
+}
+
+.level-up-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(251, 191, 36, 0.2);
+    backdrop-filter: blur(2px);
+}
+
+.level-up-badge {
+    padding: 1rem 2rem;
+    border-radius: 1.5rem;
+    background: #f97316;
+    color: #fff7ed;
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    box-shadow: 0 16px 32px rgba(194, 65, 12, 0.35);
+}
