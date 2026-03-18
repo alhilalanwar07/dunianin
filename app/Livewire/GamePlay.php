@@ -45,7 +45,6 @@ class GamePlay extends Component
             ->where('is_correct', true)
             ->count() % 3;
 
-        $this->dispatch('map-focus-active');
     }
 
     public function render()
@@ -164,7 +163,6 @@ class GamePlay extends Component
             $this->statusMessage = 'Hebat! Kamu naik level.';
 
             $this->dispatch('level-up-animation', level: $this->playerLevel);
-            $this->dispatch('map-focus-active');
         } else {
             $this->dispatch('arena-feedback', type: 'correct');
         }

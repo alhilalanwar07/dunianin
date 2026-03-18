@@ -1,5 +1,5 @@
 <div
-    class="game-area relative flex h-full w-full flex-col overflow-hidden bg-amber-50"
+    class="game-area relative flex h-full min-h-0 w-full flex-col overflow-hidden bg-amber-50"
     x-data="{
         showLevelUp: false,
         levelUpText: '',
@@ -37,7 +37,7 @@
         </div>
     </header>
 
-    <div class="flex-1 pt-20 min-[520px]:pt-24 sm:pt-28">
+    <div class="flex-1 min-h-0 pt-20 min-[520px]:pt-24 sm:pt-28">
         @if ($statusMessage)
             <div class="mx-3 mb-2 rounded-2xl bg-emerald-100 px-3 py-2 text-sm font-bold text-emerald-700 sm:mx-6 sm:mb-3 sm:px-4 sm:text-lg">
                 {{ $statusMessage }}
@@ -45,7 +45,7 @@
         @endif
 
     @if ($state === 'map')
-        <section wire:key="view-map" wire:transition.opacity.duration.300ms class="flex-1 touch-pan-y overflow-y-auto overscroll-y-contain px-2 pb-4 pt-2 [-webkit-overflow-scrolling:touch] min-[520px]:px-3 sm:px-5" x-ref="mapScroller">
+        <section wire:key="view-map" wire:transition.opacity.duration.300ms class="flex-1 min-h-0 touch-pan-y overflow-y-auto overscroll-y-contain px-2 pb-4 pt-2 [-webkit-overflow-scrolling:touch] min-[520px]:px-3 sm:px-5" x-ref="mapScroller">
             <div class="mx-auto w-full max-w-4xl rounded-3xl border border-orange-100/80 bg-gradient-to-b from-orange-50 via-amber-50 to-orange-100/30 p-3 shadow-[0_14px_34px_rgba(217,119,6,0.14)] sm:rounded-[2rem] sm:p-4">
                 <div class="sticky top-0 z-20 mb-2 flex justify-center sm:justify-end">
                     <button type="button" @click="scrollMapToTop()" class="touch-target rounded-full border border-orange-300/80 bg-white/90 px-3 py-1 text-sm font-extrabold text-orange-700 shadow-sm backdrop-blur transition hover:bg-white sm:px-4 sm:py-1.5 sm:text-base">
