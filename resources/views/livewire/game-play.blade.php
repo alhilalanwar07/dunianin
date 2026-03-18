@@ -14,17 +14,17 @@
     "
     x-on:map-focus-active.window="$nextTick(() => { if ($refs.activeNode) { $refs.activeNode.scrollIntoView({ behavior: 'smooth', block: 'center' }); } })"
 >
-    <header class="flex flex-col items-center justify-between gap-4 bg-orange-50 px-6 py-4 shadow-sm md:flex-row">
-        <div class="text-center md:text-left">
-            <h1 class="text-3xl font-extrabold text-amber-900">Dunia Anin</h1>
-            <p class="text-xl font-bold text-orange-700">Halo, {{ $player?->username ?? 'Pemain' }}</p>
+    <header class="flex flex-col items-center justify-between gap-4 bg-orange-50 px-4 py-4 shadow-sm sm:flex-row sm:px-6">
+        <div class="text-center sm:text-left">
+            <h1 class="text-2xl font-extrabold text-amber-900 sm:text-3xl">Dunia Anin</h1>
+            <p class="text-lg font-bold text-orange-700 sm:text-xl">Halo, {{ $player?->username ?? 'Pemain' }}</p>
         </div>
-        <div class="flex flex-col items-center gap-2 text-center md:items-end md:text-right">
-            <div class="flex gap-4">
-                <p class="text-lg font-bold text-orange-700" x-text="`Level ${livePlayerLevel}`"></p>
-                <p class="text-lg font-bold text-amber-900" x-text="`Skor ${new Intl.NumberFormat('id-ID').format(livePlayerScore)}`"></p>
+        <div class="flex w-full flex-col items-center gap-2 text-center sm:w-auto sm:items-end sm:text-right">
+            <div class="flex w-full justify-between gap-4 rounded-xl bg-orange-100 px-4 py-2 sm:w-auto sm:bg-transparent sm:p-0">
+                <p class="text-base font-bold text-orange-700 sm:text-lg" x-text="`Level ${livePlayerLevel}`"></p>
+                <p class="text-base font-bold text-amber-900 sm:text-lg" x-text="`Skor ${new Intl.NumberFormat('id-ID').format(livePlayerScore)}`"></p>
             </div>
-            <a href="{{ route('leaderboard') }}" wire:navigate class="inline-block text-lg font-bold text-orange-600 underline transition hover:text-orange-800">
+            <a href="{{ route('leaderboard') }}" wire:navigate class="inline-block rounded-full bg-orange-200 px-4 py-1 text-sm font-bold text-orange-700 shadow-sm transition hover:bg-orange-300 sm:bg-transparent sm:px-0 sm:py-0 sm:text-lg sm:text-orange-600 sm:underline sm:shadow-none sm:hover:bg-transparent sm:hover:text-orange-800">
                 Leaderboard
             </a>
         </div>
@@ -138,11 +138,11 @@
                     </template>
 
                     <template x-if="challenge.engine === 'macro_dnd'">
-                        <div class="flex flex-1 flex-col gap-6 md:flex-row p-2">
-                            <div class="flex w-full md:w-3/5 flex-wrap items-center justify-center gap-6 rounded-[2rem] bg-white/50 p-6 shadow-inner" style="min-height: 280px;">
+                        <div class="flex flex-1 flex-col gap-4 p-2 sm:flex-row sm:gap-6">
+                            <div class="flex w-full flex-wrap items-center justify-center gap-4 rounded-[2rem] bg-white/50 p-4 shadow-inner sm:w-3/5 sm:gap-6 sm:p-6" style="min-height: 200px;">
                                 @for ($i = 0; $i < ($currentChallenge['payload']['spawn_count'] ?? 3); $i++)
                                     <div
-                                        class="touch-target flex h-28 w-28 cursor-grab items-center justify-center rounded-3xl bg-gradient-to-br from-violet-400 to-fuchsia-400 shadow-xl transition-all duration-300 hover:scale-110 hover:-rotate-6 active:cursor-grabbing active:scale-95"
+                                        class="touch-target flex h-20 w-20 cursor-grab items-center justify-center rounded-2xl bg-gradient-to-br from-violet-400 to-fuchsia-400 shadow-xl transition-all duration-300 hover:scale-110 hover:-rotate-6 active:cursor-grabbing active:scale-95 sm:h-28 sm:w-28 sm:rounded-3xl"
                                         draggable="true"
                                         @dragstart="drag({{ $i }})"
                                         x-show="!items[{{ $i }}]?.done"
@@ -150,51 +150,51 @@
                                         x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                                         x-transition:leave-end="opacity-0 scale-50 translate-y-10"
                                     >
-                                        <div class="pointer-events-none absolute inset-0 rounded-3xl border-4 border-white/30"></div>
-                                        <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-20 w-20 text-white drop-shadow-lg" />
+                                        <div class="pointer-events-none absolute inset-0 rounded-2xl border-4 border-white/30 sm:rounded-3xl"></div>
+                                        <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-14 w-14 text-white drop-shadow-lg sm:h-20 sm:w-20" />
                                     </div>
                                 @endfor
                             </div>
 
                             <div
-                                class="flex w-full md:w-2/5 items-center justify-center rounded-[2rem] border-8 border-dashed border-amber-400 bg-amber-100/50 p-6 shadow-lg transition-all duration-300"
+                                class="flex w-full items-center justify-center rounded-[2rem] border-8 border-dashed border-amber-400 bg-amber-100/50 p-4 shadow-lg transition-all duration-300 sm:w-2/5 sm:p-6"
                                 :class="draggedIndex !== null ? 'scale-[1.02] border-amber-500 bg-amber-200/80 shadow-2xl animate-pulse' : ''"
                                 @dragover.prevent
                                 @drop.prevent="drop()"
                             >
                                 <div class="text-center transition-transform duration-300" :class="draggedIndex !== null ? 'scale-110' : ''">
-                                    <div class="mx-auto flex h-40 w-40 items-center justify-center rounded-full bg-white/50 shadow-inner mb-4">
-                                        <x-svg-icon name="keranjang" class="h-28 w-28 text-orange-500 drop-shadow-md" />
+                                    <div class="mx-auto mb-2 flex h-24 w-24 items-center justify-center rounded-full bg-white/50 shadow-inner sm:mb-4 sm:h-40 sm:w-40">
+                                        <x-svg-icon name="keranjang" class="h-16 w-16 text-orange-500 drop-shadow-md sm:h-28 sm:w-28" />
                                     </div>
-                                    <p class="text-3xl font-extrabold text-amber-900 drop-shadow-sm" x-text="draggedIndex !== null ? 'Lepaskan!' : 'Taruh di sini'"></p>
+                                    <p class="text-xl font-extrabold text-amber-900 drop-shadow-sm sm:text-3xl" x-text="draggedIndex !== null ? 'Lepaskan!' : 'Taruh di sini'"></p>
                                 </div>
                             </div>
                         </div>
                     </template>
 
                     <template x-if="challenge.engine === 'binary_choice'">
-                        <div class="flex flex-1 flex-col gap-6 md:flex-row p-2">
-                            <button class="group flex-1 rounded-[2.5rem] bg-gradient-to-b from-rose-100 to-rose-200 p-8 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-4 hover:shadow-rose-400/50 active:scale-95" 
+                        <div class="flex flex-1 flex-col gap-4 p-2 sm:flex-row sm:gap-6">
+                            <button class="group flex-1 rounded-[2.5rem] bg-gradient-to-b from-rose-100 to-rose-200 p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-4 hover:shadow-rose-400/50 active:scale-95 sm:p-8" 
                                 @click="choose('left')" 
                                 :class="wrongChoice === 'left' ? 'animate-shake ring-8 ring-rose-400 bg-rose-300' : ''">
-                                <p class="mb-6 inline-block rounded-full bg-rose-500 px-8 py-3 text-2xl font-black tracking-widest text-white shadow-lg">KIRI</p>
-                                <div class="flex flex-wrap items-center justify-center gap-4">
+                                <p class="mb-4 inline-block rounded-full bg-rose-500 px-6 py-2 text-xl font-black tracking-widest text-white shadow-lg sm:mb-6 sm:px-8 sm:py-3 sm:text-2xl">KIRI</p>
+                                <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
                                     @for ($i = 0; $i < ($currentChallenge['payload']['left_count'] ?? 2); $i++)
-                                        <div class="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-md transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
-                                            <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-12 w-12 text-rose-500 drop-shadow-sm" />
+                                        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-md transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110 sm:h-20 sm:w-20">
+                                            <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-10 w-10 text-rose-500 drop-shadow-sm sm:h-12 sm:w-12" />
                                         </div>
                                     @endfor
                                 </div>
                             </button>
 
-                            <button class="group flex-1 rounded-[2.5rem] bg-gradient-to-b from-emerald-100 to-emerald-200 p-8 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-4 hover:shadow-emerald-400/50 active:scale-95" 
+                            <button class="group flex-1 rounded-[2.5rem] bg-gradient-to-b from-emerald-100 to-emerald-200 p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-4 hover:shadow-emerald-400/50 active:scale-95 sm:p-8" 
                                 @click="choose('right')" 
                                 :class="wrongChoice === 'right' ? 'animate-shake ring-8 ring-rose-400 bg-rose-300' : ''">
-                                <p class="mb-6 inline-block rounded-full bg-emerald-500 px-8 py-3 text-2xl font-black tracking-widest text-white shadow-lg">KANAN</p>
-                                <div class="flex flex-wrap items-center justify-center gap-4">
+                                <p class="mb-4 inline-block rounded-full bg-emerald-500 px-6 py-2 text-xl font-black tracking-widest text-white shadow-lg sm:mb-6 sm:px-8 sm:py-3 sm:text-2xl">KANAN</p>
+                                <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
                                     @for ($i = 0; $i < ($currentChallenge['payload']['right_count'] ?? 3); $i++)
-                                        <div class="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-md transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-110">
-                                            <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-12 w-12 text-emerald-500 drop-shadow-sm" />
+                                        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-md transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-110 sm:h-20 sm:w-20">
+                                            <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-10 w-10 text-emerald-500 drop-shadow-sm sm:h-12 sm:w-12" />
                                         </div>
                                     @endfor
                                 </div>
