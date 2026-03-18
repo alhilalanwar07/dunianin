@@ -106,7 +106,7 @@
                             <x-svg-icon name="centang" class="h-32 w-32 text-white drop-shadow-md" />
                         </div>
                         <h2 class="mb-8 text-center text-4xl font-extrabold text-white drop-shadow-md">Hebat!<br>Jawabanmu Benar</h2>
-                        <button type="button" @click="lanjutKeBerikutnya()" class="touch-target rounded-full bg-white px-8 py-4 text-2xl font-extrabold text-emerald-600 shadow-xl transition hover:scale-105 active:scale-95 outline-none">
+                        <button type="button" @click="if(!busy) { busy = true; $wire.challengeSelesai(challenge.question_id, true, elapsed()); }" class="touch-target rounded-full bg-white px-8 py-4 text-2xl font-extrabold text-emerald-600 shadow-xl transition hover:scale-105 active:scale-95 outline-none pointer-events-auto">
                             Lanjut
                         </button>
                     </div>
@@ -260,19 +260,6 @@
                             this.busy = false;
                         }
                     }, 650);
-                },
-
-                async lanjutKeBerikutnya() {
-                    if (this.busy) {
-                        return;
-                    }
-                    this.busy = true;
-                    try {
-                        await this.wire.challengeSelesai(this.challenge.question_id, true, this.elapsed());
-                    } catch (e) {
-                        this.busy = false;
-                        console.error('Error saat submit:', e);
-                    }
                 },
 
                 tap(index) {
