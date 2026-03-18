@@ -55,15 +55,23 @@
             }
 
             this.speakFallback(challenge.prompt || challenge?.payload?.prompt || 'Ayo mulai tantangannya');
+        },
+        announceSuccess() {
+            this.speakFallback('Hebat, jawabanmu benar. Tekan tombol lanjut.');
+        },
+        announceLevelUp(level) {
+            this.speakFallback(`Hebat, kamu naik ke level ${level}.`);
         }
     }"
     x-on:level-up-animation.window="
         levelUpText = `LEVEL ${$event.detail.level}!`;
         showLevelUp = true;
         setTimeout(() => showLevelUp = false, 1800);
+        announceLevelUp($event.detail.level);
     "
     x-on:play-audio.window="playInstruction($event.detail)"
     x-on:play-challenge-audio.window="playChallengeAudio($event.detail)"
+    x-on:announce-success.window="announceSuccess()"
     x-on:map-focus-active.window="$nextTick(() => { if ($refs.activeNode) { $refs.activeNode.scrollIntoView({ behavior: 'smooth', block: 'center' }); } })"
 >
     <!-- Audio Unlock / Start Game Screen -->
@@ -341,6 +349,7 @@
                         this.visualState = 'correct';
                         setTimeout(() => {
                             this.visualState = 'success_dialog';
+                            this.$dispatch('announce-success');
                             this.busy = false;
                         }, 450);
 
