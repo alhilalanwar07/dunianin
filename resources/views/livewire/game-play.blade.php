@@ -113,10 +113,10 @@
                     }"
                 >
                     <!-- Loading Overlay -->
-                    <div wire:loading.flex wire:target="challengeSelesai, kembaliKeMap" class="absolute inset-0 z-50 flex items-center justify-center bg-white/60 backdrop-blur-sm">
-                        <div class="animate-bounce">
-                            <x-svg-icon name="mahkota" class="mx-auto h-20 w-20 text-orange-500" />
-                            <p class="mt-4 font-bold text-orange-600">Memuat...</p>
+                    <div wire:loading.flex wire:target="challengeSelesai, kembaliKeMap" class="absolute inset-0 z-50 flex items-center justify-center bg-amber-50/70 backdrop-blur-sm">
+                        <div class="flex animate-bounce flex-col items-center">
+                            <x-svg-icon name="mahkota" class="h-20 w-20 text-amber-500 drop-shadow-md sm:h-28 sm:w-28" />
+                            <p class="mt-4 text-2xl font-extrabold text-amber-700 drop-shadow-sm sm:mt-6 sm:text-4xl">Memuat...</p>
                         </div>
                     </div>
 
