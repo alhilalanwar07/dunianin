@@ -23,6 +23,8 @@ class GamePlay extends Component
 
     public int $correctCount = 0;
 
+    public int $challengeVersion = 0;
+
     public array $recentQuestionIds = [];
 
     public ?string $statusMessage = null;
@@ -99,6 +101,7 @@ class GamePlay extends Component
 
         $this->currentChallenge = [
             'question_id' => $question->id,
+            'instance_key' => $question->id . '-' . (++$this->challengeVersion),
             'engine' => $question->tipe_engine,
             'prompt' => Arr::get($payload, 'prompt', 'Mainkan tantangan ini.'),
             'payload' => $payload,

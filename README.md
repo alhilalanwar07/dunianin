@@ -145,3 +145,4 @@ Setiap selesai update fitur, README ini harus ikut diperbarui agar:
 - Mengaktifkan Livewire .live untuk realtime pada input username dan HUD gameplay (level, skor, progress).
 - Menambahkan leaderboard realtime dengan polling periodik pada Livewire.
 - Menambahkan test command game:status agar monitoring CLI tervalidasi.
+- Memperbaiki bug arena tidak lanjut ke game berikutnya dengan instance key per ronde agar state Alpine selalu reset.

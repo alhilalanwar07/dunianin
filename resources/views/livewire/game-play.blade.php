@@ -80,7 +80,7 @@
         <section class="flex-1 p-5">
             @if ($currentChallenge)
                 <div
-                    wire:key="arena-{{ $currentChallenge['question_id'] }}"
+                    wire:key="arena-{{ $currentChallenge['instance_key'] ?? $currentChallenge['question_id'] }}"
                     x-data="gameArena(@js($currentChallenge))"
                     x-init="start($wire)"
                     class="flex h-full flex-col rounded-3xl bg-orange-50 p-5 shadow-lg transition"

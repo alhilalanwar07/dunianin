@@ -144,4 +144,42 @@ class GameFlowTest extends TestCase
             'score_earned' => 0,
         ]);
     }
+
+    public function test_next_round_gets_new_instance_key_even_with_same_question(): void
+    {
+        $player = Player::query()->create([
+            'username' => 'Dedi',
+            'session_token' => '55555555-5555-5555-5555-555555555555',
+            'current_level' => 1,
+            'total_score' => 0,
+            'challenges_completed' => 0,
+            'last_active_at' => now(),
+        ]);
+
+        $question = Question::query()->create([
+            'level' => 1,
+            'tipe_engine' => 'tap_collector',
+            'payload' => [
+                'prompt' => 'Ketuk semua apel!',
+                'target_asset' => 'apel',
+                'spawn_count' => 3,
+            ],
+            'difficulty' => 1,
+        ]);
+
+        $this->withSession(['player_id' => $player->id]);
+
+        $component = Livewire::test(GamePlay::class);
+        $component->call('masukArena', 1);
+
+        $first = $component->get('currentChallenge');
+        $this->assertNotNull($first);
+
+        $component->call('challengeSelesai', $question->id, true, 1800);
+
+        $second = $component->get('currentChallenge');
+        $this->assertNotNull($second);
+
+        $this->assertNotSame($first['instance_key'], $second['instance_key']);
+    }
 }
