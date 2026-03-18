@@ -1,5 +1,5 @@
 <div
-    class="game-area flex h-full w-full flex-col bg-amber-50"
+    class="game-area relative flex h-full w-full flex-col overflow-hidden bg-amber-50"
     x-data="{
         showLevelUp: false,
         levelUpText: '',
@@ -14,27 +14,30 @@
     "
     x-on:map-focus-active.window="$nextTick(() => { if ($refs.activeNode) { $refs.activeNode.scrollIntoView({ behavior: 'smooth', block: 'center' }); } })"
 >
-    <header class="flex flex-col items-center justify-between gap-2 bg-orange-50 px-3 py-2.5 shadow-sm min-[520px]:flex-row min-[520px]:px-4 min-[520px]:py-3 sm:gap-3 sm:px-6 sm:py-4">
-        <div class="text-center min-[520px]:text-left sm:text-left">
-            <h1 class="text-xl font-extrabold text-amber-900 sm:text-3xl">Dunia Anin</h1>
-            <p class="text-sm font-bold text-orange-700 sm:text-xl">Halo, {{ $player?->username ?? 'Pemain' }}</p>
-        </div>
-        <div class="flex w-full flex-col items-center gap-1.5 text-center min-[520px]:w-auto min-[520px]:items-end min-[520px]:text-right sm:w-auto sm:items-end sm:gap-2 sm:text-right">
-            <div class="flex w-full justify-between gap-3 rounded-xl bg-orange-100 px-3 py-1.5 min-[520px]:w-auto min-[520px]:bg-transparent min-[520px]:px-0 min-[520px]:py-0 sm:w-auto sm:gap-4 sm:bg-transparent sm:px-0 sm:py-0">
-                <p class="text-sm font-bold text-orange-700 sm:text-lg" x-text="`Level ${livePlayerLevel}`"></p>
-                <p class="text-sm font-bold text-amber-900 sm:text-lg" x-text="`Skor ${new Intl.NumberFormat('id-ID').format(livePlayerScore)}`"></p>
+    <header class="pointer-events-none absolute inset-x-2 top-2 z-30 rounded-2xl border border-orange-200/80 bg-orange-50/90 px-3 py-2 shadow-md backdrop-blur-sm min-[520px]:inset-x-3 sm:inset-x-4 sm:rounded-3xl sm:px-4 sm:py-3">
+        <div class="flex items-center justify-between gap-2">
+            <div class="min-w-0">
+                <h1 class="truncate text-base font-extrabold text-amber-900 min-[520px]:text-lg sm:text-2xl">Dunia Anin</h1>
+                <p class="truncate text-xs font-bold text-orange-700 min-[520px]:text-sm sm:text-lg">Halo, {{ $player?->username ?? 'Pemain' }}</p>
             </div>
-            <a href="{{ route('leaderboard') }}" wire:navigate class="inline-block rounded-full bg-orange-200 px-3 py-1 text-xs font-bold text-orange-700 shadow-sm transition hover:bg-orange-300 min-[520px]:bg-transparent min-[520px]:px-0 min-[520px]:py-0 min-[520px]:text-sm min-[520px]:text-orange-600 min-[520px]:underline min-[520px]:shadow-none min-[520px]:hover:bg-transparent min-[520px]:hover:text-orange-800 sm:bg-transparent sm:px-0 sm:py-0 sm:text-lg sm:text-orange-600 sm:underline sm:shadow-none sm:hover:bg-transparent sm:hover:text-orange-800">
-                Leaderboard
-            </a>
+            <div class="text-right">
+                <div class="flex items-center justify-end gap-2 min-[520px]:gap-3 sm:gap-4">
+                    <p class="text-xs font-bold text-orange-700 min-[520px]:text-sm sm:text-lg" x-text="`Level ${livePlayerLevel}`"></p>
+                    <p class="text-xs font-bold text-amber-900 min-[520px]:text-sm sm:text-lg" x-text="`Skor ${new Intl.NumberFormat('id-ID').format(livePlayerScore)}`"></p>
+                </div>
+                <a href="{{ route('leaderboard') }}" wire:navigate class="pointer-events-auto inline-block text-[11px] font-bold text-orange-700 underline underline-offset-2 transition hover:text-orange-800 min-[520px]:text-xs sm:text-base">
+                    Leaderboard
+                </a>
+            </div>
         </div>
     </header>
 
-    @if ($statusMessage)
-        <div class="mx-3 mt-2 rounded-2xl bg-emerald-100 px-3 py-2 text-sm font-bold text-emerald-700 sm:mx-6 sm:mt-3 sm:px-4 sm:text-lg">
-            {{ $statusMessage }}
-        </div>
-    @endif
+    <div class="flex-1 pt-20 min-[520px]:pt-24 sm:pt-28">
+        @if ($statusMessage)
+            <div class="mx-3 mb-2 rounded-2xl bg-emerald-100 px-3 py-2 text-sm font-bold text-emerald-700 sm:mx-6 sm:mb-3 sm:px-4 sm:text-lg">
+                {{ $statusMessage }}
+            </div>
+        @endif
 
     @if ($state === 'map')
         <section wire:key="view-map" wire:transition.opacity.duration.300ms class="flex-1 overflow-y-auto p-3 sm:p-6" x-ref="mapScroller">
@@ -217,6 +220,7 @@
             @endif
         </section>
     @endif
+    </div>
 
     <div x-show="showLevelUp" x-transition.opacity class="level-up-overlay">
         <div class="level-up-badge animate-star-burst" x-text="levelUpText"></div>
