@@ -13,10 +13,11 @@
                 this.$refs.mapScroller.scrollTo({ top: 0, behavior: 'smooth' });
             }
         },
-        playInstruction(url) {
+        playInstruction(url, fallbackText = '') {
             if (this.audioUnlocked && url) {
+                this.audioPlayer.onerror = () => this.speakFallback(fallbackText);
                 this.audioPlayer.src = url;
-                this.audioPlayer.play().catch(e => console.log('Audio play failed:', e));
+                this.audioPlayer.play().catch(() => this.speakFallback(fallbackText));
             }
         },
         speakFallback(text) {
@@ -49,7 +50,7 @@
             }
 
             if (challenge.payload && challenge.payload.audio_url) {
-                this.playInstruction(challenge.payload.audio_url);
+                this.playInstruction(challenge.payload.audio_url, challenge.prompt || challenge?.payload?.prompt || 'Ayo mulai tantangannya');
                 return;
             }
 
@@ -62,6 +63,7 @@
         setTimeout(() => showLevelUp = false, 1800);
     "
     x-on:play-audio.window="playInstruction($event.detail)"
+    x-on:play-challenge-audio.window="playChallengeAudio($event.detail)"
     x-on:map-focus-active.window="$nextTick(() => { if ($refs.activeNode) { $refs.activeNode.scrollIntoView({ behavior: 'smooth', block: 'center' }); } })"
 >
     <!-- Audio Unlock / Start Game Screen -->
@@ -317,7 +319,7 @@
                     }
 
                     // Play audio dynamically when arena starts
-                    this.$root.playChallengeAudio(this.challenge);
+                    this.$dispatch('play-challenge-audio', this.challenge);
                 },
 
                 elapsed() {
