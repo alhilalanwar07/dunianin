@@ -14,17 +14,17 @@
     "
     x-on:map-focus-active.window="$nextTick(() => { if ($refs.activeNode) { $refs.activeNode.scrollIntoView({ behavior: 'smooth', block: 'center' }); } })"
 >
-    <header class="flex flex-col items-center justify-between gap-2 bg-orange-50 px-3 py-2.5 shadow-sm sm:gap-3 sm:px-6 sm:py-4">
-        <div class="text-center sm:text-left">
+    <header class="flex flex-col items-center justify-between gap-2 bg-orange-50 px-3 py-2.5 shadow-sm min-[520px]:flex-row min-[520px]:px-4 min-[520px]:py-3 sm:gap-3 sm:px-6 sm:py-4">
+        <div class="text-center min-[520px]:text-left sm:text-left">
             <h1 class="text-xl font-extrabold text-amber-900 sm:text-3xl">Dunia Anin</h1>
             <p class="text-sm font-bold text-orange-700 sm:text-xl">Halo, {{ $player?->username ?? 'Pemain' }}</p>
         </div>
-        <div class="flex w-full flex-col items-center gap-1.5 text-center sm:w-auto sm:items-end sm:gap-2 sm:text-right">
-            <div class="flex w-full justify-between gap-3 rounded-xl bg-orange-100 px-3 py-1.5 sm:w-auto sm:gap-4 sm:bg-transparent sm:px-0 sm:py-0">
+        <div class="flex w-full flex-col items-center gap-1.5 text-center min-[520px]:w-auto min-[520px]:items-end min-[520px]:text-right sm:w-auto sm:items-end sm:gap-2 sm:text-right">
+            <div class="flex w-full justify-between gap-3 rounded-xl bg-orange-100 px-3 py-1.5 min-[520px]:w-auto min-[520px]:bg-transparent min-[520px]:px-0 min-[520px]:py-0 sm:w-auto sm:gap-4 sm:bg-transparent sm:px-0 sm:py-0">
                 <p class="text-sm font-bold text-orange-700 sm:text-lg" x-text="`Level ${livePlayerLevel}`"></p>
                 <p class="text-sm font-bold text-amber-900 sm:text-lg" x-text="`Skor ${new Intl.NumberFormat('id-ID').format(livePlayerScore)}`"></p>
             </div>
-            <a href="{{ route('leaderboard') }}" wire:navigate class="inline-block rounded-full bg-orange-200 px-3 py-1 text-xs font-bold text-orange-700 shadow-sm transition hover:bg-orange-300 sm:bg-transparent sm:px-0 sm:py-0 sm:text-lg sm:text-orange-600 sm:underline sm:shadow-none sm:hover:bg-transparent sm:hover:text-orange-800">
+            <a href="{{ route('leaderboard') }}" wire:navigate class="inline-block rounded-full bg-orange-200 px-3 py-1 text-xs font-bold text-orange-700 shadow-sm transition hover:bg-orange-300 min-[520px]:bg-transparent min-[520px]:px-0 min-[520px]:py-0 min-[520px]:text-sm min-[520px]:text-orange-600 min-[520px]:underline min-[520px]:shadow-none min-[520px]:hover:bg-transparent min-[520px]:hover:text-orange-800 sm:bg-transparent sm:px-0 sm:py-0 sm:text-lg sm:text-orange-600 sm:underline sm:shadow-none sm:hover:bg-transparent sm:hover:text-orange-800">
                 Leaderboard
             </a>
         </div>
@@ -115,16 +115,16 @@
                         </button>
                     </div>
 
-                    <div class="mb-3 flex flex-col items-center justify-between gap-2 text-center sm:mb-4 sm:flex-row sm:gap-0 sm:text-left">
-                        <p class="text-lg font-extrabold leading-tight text-amber-900 sm:text-3xl" x-text="challenge.prompt"></p>
-                        <p class="rounded-full bg-orange-200 px-3 py-1 text-sm font-bold text-orange-700 sm:px-4 sm:text-xl" x-text="`Progress ${liveCorrectCount}/3`"></p>
+                    <div class="mb-3 flex flex-col items-center justify-between gap-2 text-center min-[520px]:flex-row min-[520px]:text-left sm:mb-4 sm:flex-row sm:gap-0 sm:text-left">
+                        <p class="text-lg font-extrabold leading-tight text-amber-900 min-[520px]:text-xl sm:text-3xl" x-text="challenge.prompt"></p>
+                        <p class="rounded-full bg-orange-200 px-3 py-1 text-sm font-bold text-orange-700 min-[520px]:text-base sm:px-4 sm:text-xl" x-text="`Progress ${liveCorrectCount}/3`"></p>
                     </div>
 
                     <template x-if="challenge.engine === 'tap_collector'">
-                        <div class="flex flex-1 flex-wrap items-center justify-center gap-3 p-2 perspective-1000 sm:gap-6 sm:p-4">
+                        <div class="flex flex-1 flex-wrap items-center justify-center gap-3 p-2 perspective-1000 min-[520px]:gap-4 sm:gap-6 sm:p-4">
                             @for ($i = 0; $i < ($currentChallenge['payload']['spawn_count'] ?? 3); $i++)
                                 <button
-                                    class="touch-target relative flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-sky-300 to-indigo-400 shadow-[0_10px_20px_rgba(0,0,0,0.2)] transition-all duration-300 sm:h-32 sm:w-32"
+                                    class="touch-target relative flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-sky-300 to-indigo-400 shadow-[0_10px_20px_rgba(0,0,0,0.2)] transition-all duration-300 min-[520px]:h-24 min-[520px]:w-24 sm:h-32 sm:w-32"
                                     @click="tap({{ $i }})"
                                     :disabled="items[{{ $i }}]?.done"
                                     :class="items[{{ $i }}]?.done 
@@ -133,18 +133,18 @@
                                     style="animation-delay: {{ $i * 200 }}ms; transform-style: preserve-3d;"
                                 >
                                     <div class="pointer-events-none absolute inset-0 rounded-full border-2 border-white/40 sm:border-4"></div>
-                                    <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-12 w-12 text-white drop-shadow-xl transition-transform sm:h-20 sm:w-20" x-bind:class="items[{{ $i }}]?.done ? '' : 'animate-bounce'" style="animation-delay: {{ $i * 150 }}ms" />
+                                    <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-12 w-12 text-white drop-shadow-xl transition-transform min-[520px]:h-14 min-[520px]:w-14 sm:h-20 sm:w-20" x-bind:class="items[{{ $i }}]?.done ? '' : 'animate-bounce'" style="animation-delay: {{ $i * 150 }}ms" />
                                 </button>
                             @endfor
                         </div>
                     </template>
 
                     <template x-if="challenge.engine === 'macro_dnd'">
-                        <div class="flex flex-1 flex-col gap-4 p-2 sm:flex-row sm:gap-6">
-                            <div class="flex w-full flex-wrap items-center justify-center gap-2 rounded-2xl bg-white/50 p-3 shadow-inner sm:w-3/5 sm:gap-6 sm:rounded-[2rem] sm:p-6" style="min-height: 150px;">
+                        <div class="flex flex-1 flex-col gap-3 p-2 min-[520px]:flex-row sm:gap-6">
+                            <div class="flex w-full flex-wrap items-center justify-center gap-2 rounded-2xl bg-white/50 p-3 shadow-inner min-[520px]:w-3/5 min-[520px]:gap-3 sm:w-3/5 sm:gap-6 sm:rounded-[2rem] sm:p-6" style="min-height: 130px;">
                                 @for ($i = 0; $i < ($currentChallenge['payload']['spawn_count'] ?? 3); $i++)
                                     <div
-                                        class="touch-none touch-target flex h-14 w-14 cursor-grab items-center justify-center rounded-xl bg-gradient-to-br from-violet-400 to-fuchsia-400 shadow-xl transition-all duration-300 hover:scale-110 hover:-rotate-6 active:cursor-grabbing active:scale-95 sm:h-28 sm:w-28 sm:rounded-3xl"
+                                        class="touch-none touch-target flex h-14 w-14 cursor-grab items-center justify-center rounded-xl bg-gradient-to-br from-violet-400 to-fuchsia-400 shadow-xl transition-all duration-300 hover:scale-110 hover:-rotate-6 active:cursor-grabbing active:scale-95 min-[520px]:h-16 min-[520px]:w-16 sm:h-28 sm:w-28 sm:rounded-3xl"
                                         draggable="true"
                                         @dragstart="drag({{ $i }})"
                                         x-show="!items[{{ $i }}]?.done"
@@ -153,29 +153,29 @@
                                         x-transition:leave-end="opacity-0 scale-50 translate-y-10"
                                     >
                                         <div class="pointer-events-none absolute inset-0 rounded-xl border-2 border-white/30 sm:border-4 sm:rounded-3xl"></div>
-                                        <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-8 w-8 text-white drop-shadow-lg sm:h-20 sm:w-20" />
+                                        <x-svg-icon name="{{ $currentChallenge['payload']['target_asset'] ?? 'apel' }}" class="h-8 w-8 text-white drop-shadow-lg min-[520px]:h-9 min-[520px]:w-9 sm:h-20 sm:w-20" />
                                     </div>
                                 @endfor
                             </div>
 
                             <div
-                                class="flex w-full items-center justify-center rounded-2xl border-4 border-dashed border-amber-400 bg-amber-100/50 p-3 shadow-lg transition-all duration-300 sm:w-2/5 sm:rounded-[2rem] sm:border-8 sm:p-6"
+                                class="flex w-full items-center justify-center rounded-2xl border-4 border-dashed border-amber-400 bg-amber-100/50 p-3 shadow-lg transition-all duration-300 min-[520px]:w-2/5 sm:w-2/5 sm:rounded-[2rem] sm:border-8 sm:p-6"
                                 :class="draggedIndex !== null ? 'scale-[1.02] border-amber-500 bg-amber-200/80 shadow-2xl animate-pulse' : ''"
                                 @dragover.prevent
                                 @drop.prevent="drop()"
                             >
                                 <div class="text-center transition-transform duration-300" :class="draggedIndex !== null ? 'scale-110' : ''">
-                                    <div class="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-white/50 shadow-inner sm:mb-4 sm:h-40 sm:w-40">
-                                        <x-svg-icon name="keranjang" class="h-10 w-10 text-orange-500 drop-shadow-md sm:h-28 sm:w-28" />
+                                    <div class="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-white/50 shadow-inner min-[520px]:h-20 min-[520px]:w-20 sm:mb-4 sm:h-40 sm:w-40">
+                                        <x-svg-icon name="keranjang" class="h-10 w-10 text-orange-500 drop-shadow-md min-[520px]:h-12 min-[520px]:w-12 sm:h-28 sm:w-28" />
                                     </div>
-                                    <p class="text-base font-extrabold text-amber-900 drop-shadow-sm sm:text-3xl" x-text="draggedIndex !== null ? 'Lepaskan!' : 'Taruh di sini'"></p>
+                                    <p class="text-base font-extrabold text-amber-900 drop-shadow-sm min-[520px]:text-lg sm:text-3xl" x-text="draggedIndex !== null ? 'Lepaskan!' : 'Taruh di sini'"></p>
                                 </div>
                             </div>
                         </div>
                     </template>
 
                     <template x-if="challenge.engine === 'binary_choice'">
-                        <div class="flex flex-1 flex-col gap-3 p-2 sm:flex-row sm:gap-6">
+                        <div class="flex flex-1 flex-col gap-3 p-2 min-[520px]:flex-row sm:gap-6">
                             <button class="group flex-1 rounded-3xl bg-gradient-to-b from-rose-100 to-rose-200 p-4 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-4 hover:shadow-rose-400/50 active:scale-95 sm:rounded-[2.5rem] sm:p-8" 
                                 @click="choose('left')" 
                                 :class="wrongChoice === 'left' ? 'animate-shake ring-8 ring-rose-400 bg-rose-300' : ''">
