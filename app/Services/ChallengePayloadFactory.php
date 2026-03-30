@@ -21,6 +21,7 @@ class ChallengePayloadFactory
                 'spawn_count' => random_int(2, max(2, $maxSpawn)),
             ],
             'match_audio_image' => self::makeMatchAudioImage($assetPool),
+            'memory_pair' => self::makeMemoryPair($assetPool),
             default => self::makeBinaryChoice($assetPool, $maxSpawn),
         };
 
@@ -76,6 +77,28 @@ class ChallengePayloadFactory
             'target_asset' => $targetAsset,
             'choices' => $choices,
             'answer_index' => $correctIndex,
+        ];
+    }
+
+    private static function makeMemoryPair(array $assetPool): array
+    {
+        $targetAsset = $assetPool[array_rand($assetPool)];
+        $distractors = array_values(array_filter($assetPool, fn ($asset) => $asset !== $targetAsset));
+        shuffle($distractors);
+
+        $cards = [
+            $targetAsset,
+            $targetAsset,
+            $distractors[0] ?? $targetAsset,
+            $distractors[1] ?? $targetAsset,
+        ];
+
+        shuffle($cards);
+
+        return [
+            'prompt' => 'Temukan dua gambar ' . $targetAsset . ' yang sama!',
+            'target_asset' => $targetAsset,
+            'cards' => $cards,
         ];
     }
 }

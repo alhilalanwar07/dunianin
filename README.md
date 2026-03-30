@@ -16,11 +16,12 @@ Game edukasi anak usia <= 7 tahun dengan pendekatan SDUI berbasis Laravel + Live
 - Two-state UI: level map dan game arena tanpa page reload
 - Realtime binding dengan Livewire .live pada input dan HUD gameplay
 - Leaderboard realtime dengan auto-refresh periodik
-- Tiga engine game v1:
+- Lima engine game v1:
 	- tap_collector
 	- macro_dnd
 	- binary_choice
 	- match_audio_image
+	- memory_pair
 - Aturan progress: 3 jawaban benar untuk naik level
 - Salah jawaban: soal di-roll ulang (bukan retry soal yang sama)
 - Leaderboard publik

@@ -223,7 +223,7 @@ class GamePlay extends Component
         $assets = config('svg-assets.assets', ['apel', 'kucing', 'balon', 'jeruk', 'mangga', 'pisang', 'anggur', 'semangka', 'anggur']);
 
         for ($i = $count; $i < 15; $i++) {
-            $enginePool = ['tap_collector', 'macro_dnd', 'binary_choice', 'match_audio_image'];
+            $enginePool = ['tap_collector', 'macro_dnd', 'binary_choice', 'match_audio_image', 'memory_pair'];
             $engine = $enginePool[$i % count($enginePool)];
             $payload = ChallengePayloadFactory::make($level, $engine, $assets);
 

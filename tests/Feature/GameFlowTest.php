@@ -213,4 +213,34 @@ class GameFlowTest extends TestCase
             ->assertSee('balon')
             ->assertSee('ayam');
     }
+
+    public function test_memory_pair_challenge_renders_cards(): void
+    {
+        $player = Player::query()->create([
+            'username' => 'Fani',
+            'session_token' => '77777777-7777-7777-7777-777777777777',
+            'current_level' => 5,
+            'total_score' => 0,
+            'challenges_completed' => 0,
+            'last_active_at' => now(),
+        ]);
+
+        $this->withSession(['player_id' => $player->id]);
+
+        Livewire::test(GamePlay::class)
+            ->set('state', 'arena')
+            ->set('currentChallenge', [
+                'question_id' => 'question-memory-pair',
+                'instance_key' => 'question-memory-pair-1',
+                'engine' => 'memory_pair',
+                'prompt' => 'Temukan dua gambar apel yang sama!',
+                'payload' => [
+                    'target_asset' => 'apel',
+                    'cards' => ['apel', 'jeruk', 'apel', 'pisang'],
+                ],
+            ])
+            ->assertSee('Buka dua kartu yang gambarnya sama!')
+            ->assertSee('apel')
+            ->assertSee('jeruk');
+    }
 }

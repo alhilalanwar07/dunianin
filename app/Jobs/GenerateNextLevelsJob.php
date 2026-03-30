@@ -20,7 +20,7 @@ class GenerateNextLevelsJob implements ShouldQueue
 
     public function handle(NimService $nim): void
     {
-        $enginePool = ['tap_collector', 'macro_dnd', 'binary_choice'];
+        $enginePool = ['tap_collector', 'macro_dnd', 'binary_choice', 'match_audio_image', 'memory_pair'];
         $engine = $enginePool[($this->level - 1) % count($enginePool)];
 
         $rows = $nim->generate($this->level, $engine, $this->count);
@@ -77,6 +77,31 @@ class GenerateNextLevelsJob implements ShouldQueue
                 if (! in_array($answer, ['left', 'right'], true)) {
                     continue;
                 }
+            } elseif ($engine === 'match_audio_image') {
+                $choices = $row['choices'] ?? [];
+                $answerIndex = (int) ($row['answer_index'] ?? -1);
+
+                if (! is_array($choices) || count($choices) !== 4 || ! array_key_exists($answerIndex, $choices)) {
+                    continue;
+                }
+
+                if (array_filter($choices, fn ($choice) => ! is_string($choice) || ! in_array($choice, $assets, true)) !== []) {
+                    continue;
+                }
+            } elseif ($engine === 'memory_pair') {
+                $cards = $row['cards'] ?? [];
+
+                if (! is_array($cards) || count($cards) !== 4) {
+                    continue;
+                }
+
+                if (array_filter($cards, fn ($card) => ! is_string($card) || ! in_array($card, $assets, true)) !== []) {
+                    continue;
+                }
+
+                if (count(array_keys($cards, $asset, true)) !== 2) {
+                    continue;
+                }
             } else {
                 $spawn = (int) ($row['spawn_count'] ?? 0);
 
@@ -92,6 +117,9 @@ class GenerateNextLevelsJob implements ShouldQueue
                 'left_count' => (int) ($row['left_count'] ?? 0),
                 'right_count' => (int) ($row['right_count'] ?? 0),
                 'answer_side' => (string) ($row['answer_side'] ?? ''),
+                'choices' => array_values(array_filter($row['choices'] ?? [], 'is_string')),
+                'answer_index' => (int) ($row['answer_index'] ?? 0),
+                'cards' => array_values(array_filter($row['cards'] ?? [], 'is_string')),
             ];
         }
 

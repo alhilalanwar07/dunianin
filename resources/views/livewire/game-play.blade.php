@@ -302,6 +302,32 @@
                         </div>
                     </template>
 
+                    <template x-if="challenge.engine === 'memory_pair'">
+                        <div class="flex flex-1 flex-col gap-3 p-2 sm:gap-4">
+                            <p class="text-center text-base font-bold text-amber-800 sm:text-xl">Buka dua kartu yang gambarnya sama!</p>
+                            <div class="grid flex-1 grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+                                @foreach (($currentChallenge['payload']['cards'] ?? []) as $idx => $card)
+                                    <button
+                                        class="touch-target group relative flex aspect-square [transform-style:preserve-3d] items-center justify-center rounded-2xl transition-transform duration-500 sm:rounded-3xl"
+                                        @click="flipPairCard({{ $idx }})"
+                                        :class="{
+                                            '[transform:rotateY(180deg)]': pairCardFaceUp({{ $idx }}),
+                                            'animate-shake': wrongPairIndices.includes({{ $idx }})
+                                        }"
+                                    >
+                                        <div class="absolute inset-0 flex items-center justify-center rounded-2xl bg-gradient-to-b from-orange-400 to-amber-500 shadow-[0_6px_20px_rgb(0,0,0,0.12)] [backface-visibility:hidden] sm:rounded-3xl">
+                                            <span class="text-4xl font-black text-white drop-shadow-sm sm:text-5xl">?</span>
+                                        </div>
+                                        <div class="absolute inset-0 flex flex-col items-center justify-center rounded-2xl bg-gradient-to-b from-sky-100 to-indigo-100 p-2 shadow-[0_6px_20px_rgb(0,0,0,0.1)] [backface-visibility:hidden] [transform:rotateY(180deg)] sm:rounded-3xl sm:p-4">
+                                            <x-svg-icon :name="$card" class="h-12 w-12 text-indigo-600 drop-shadow-sm transition-transform duration-300 group-hover:scale-110 sm:h-16 sm:w-16" />
+                                            <p class="mt-1 text-xs font-bold text-indigo-600 sm:text-sm">{{ $card }}</p>
+                                        </div>
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+                    </template>
+
                     <div class="mt-3 sm:mt-4">
                         <button wire:click="kembaliKeMap" class="touch-target rounded-2xl bg-gray-300 px-4 py-2 text-base font-bold text-gray-700 sm:text-lg">
                             Kembali ke Peta
@@ -333,11 +359,15 @@
                 busy: false,
                 visualState: 'playing',
                 wrongChoice: null,
+                pairRevealedIndices: [],
+                wrongPairIndices: [],
 
                 start(wire) {
                     this.wire = wire;
                     this.startedAt = Date.now();
                     this.finalTime = null;
+                    this.pairRevealedIndices = [];
+                    this.wrongPairIndices = [];
 
                     if (this.challenge.engine === 'tap_collector' || this.challenge.engine === 'macro_dnd') {
                         const total = this.challenge.payload.spawn_count || 3;
@@ -432,6 +462,40 @@
                     const isCorrect = index === this.challenge.payload.answer_index;
                     this.wrongChoice = isCorrect ? null : index;
                     this.finish(isCorrect);
+                },
+
+                pairCardFaceUp(index) {
+                    return this.pairRevealedIndices.includes(index);
+                },
+
+                flipPairCard(index) {
+                    if (this.busy || this.pairRevealedIndices.includes(index) || this.pairRevealedIndices.length >= 2) {
+                        return;
+                    }
+
+                    this.pairRevealedIndices.push(index);
+
+                    if (this.pairRevealedIndices.length < 2) {
+                        return;
+                    }
+
+                    const [firstIndex, secondIndex] = this.pairRevealedIndices;
+                    const cards = this.challenge.payload.cards || [];
+                    const isCorrect = cards[firstIndex] === cards[secondIndex];
+
+                    if (isCorrect) {
+                        setTimeout(() => {
+                            this.finish(true);
+                        }, 350);
+
+                        return;
+                    }
+
+                    this.wrongPairIndices = [...this.pairRevealedIndices];
+
+                    setTimeout(() => {
+                        this.finish(false);
+                    }, 350);
                 },
             };
         }
