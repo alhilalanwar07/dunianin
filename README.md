@@ -20,6 +20,7 @@ Game edukasi anak usia <= 7 tahun dengan pendekatan SDUI berbasis Laravel + Live
 	- tap_collector
 	- macro_dnd
 	- binary_choice
+	- match_audio_image
 - Aturan progress: 3 jawaban benar untuk naik level
 - Salah jawaban: soal di-roll ulang (bukan retry soal yang sama)
 - Leaderboard publik

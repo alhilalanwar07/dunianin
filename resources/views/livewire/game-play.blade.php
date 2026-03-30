@@ -256,8 +256,8 @@
 
                     <template x-if="challenge.engine === 'binary_choice'">
                         <div class="flex flex-1 flex-col gap-3 p-2 min-[520px]:flex-row sm:gap-6">
-                            <button class="group flex-1 rounded-3xl bg-gradient-to-b from-rose-100 to-rose-200 p-4 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-4 hover:shadow-rose-400/50 active:scale-95 sm:rounded-[2.5rem] sm:p-8" 
-                                @click="choose('left')" 
+                            <button class="group flex-1 rounded-3xl bg-gradient-to-b from-rose-100 to-rose-200 p-4 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-4 hover:shadow-rose-400/50 active:scale-95 sm:rounded-[2.5rem] sm:p-8"
+                                @click="choose('left')"
                                 :class="wrongChoice === 'left' ? 'animate-shake ring-8 ring-rose-400 bg-rose-300' : ''">
                                 <p class="mb-3 inline-block rounded-full bg-rose-500 px-4 py-1.5 text-base font-black tracking-widest text-white shadow-lg sm:mb-6 sm:px-8 sm:py-3 sm:text-2xl">KIRI</p>
                                 <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
@@ -269,8 +269,8 @@
                                 </div>
                             </button>
 
-                            <button class="group flex-1 rounded-3xl bg-gradient-to-b from-emerald-100 to-emerald-200 p-4 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-4 hover:shadow-emerald-400/50 active:scale-95 sm:rounded-[2.5rem] sm:p-8" 
-                                @click="choose('right')" 
+                            <button class="group flex-1 rounded-3xl bg-gradient-to-b from-emerald-100 to-emerald-200 p-4 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-4 hover:shadow-emerald-400/50 active:scale-95 sm:rounded-[2.5rem] sm:p-8"
+                                @click="choose('right')"
                                 :class="wrongChoice === 'right' ? 'animate-shake ring-8 ring-rose-400 bg-rose-300' : ''">
                                 <p class="mb-3 inline-block rounded-full bg-emerald-500 px-4 py-1.5 text-base font-black tracking-widest text-white shadow-lg sm:mb-6 sm:px-8 sm:py-3 sm:text-2xl">KANAN</p>
                                 <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
@@ -281,6 +281,24 @@
                                     @endfor
                                 </div>
                             </button>
+                        </div>
+                    </template>
+
+                    <template x-if="challenge.engine === 'match_audio_image'">
+                        <div class="flex flex-1 flex-col gap-3 p-2 sm:gap-4">
+                            <p class="text-center text-base font-bold text-amber-800 sm:text-xl">Pilih gambar yang cocok dengan suaranya!</p>
+                            <div class="grid flex-1 grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+                                @foreach (($currentChallenge['payload']['choices'] ?? []) as $idx => $choice)
+                                    <button
+                                        class="touch-target group relative flex aspect-square flex-col items-center justify-center rounded-2xl bg-gradient-to-b from-sky-100 to-indigo-100 p-2 shadow-[0_6px_20px_rgb(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-2 hover:shadow-indigo-400/40 active:scale-95 sm:rounded-3xl sm:p-4"
+                                        @click="pick({{ $idx }})"
+                                        :class="wrongChoice === {{ $idx }} ? 'animate-shake ring-8 ring-rose-400 bg-rose-200' : ''"
+                                    >
+                                        <x-svg-icon :name="$choice" class="h-12 w-12 text-indigo-600 drop-shadow-sm transition-transform duration-300 group-hover:scale-110 sm:h-16 sm:w-16" />
+                                        <p class="mt-1 text-xs font-bold text-indigo-600 sm:text-sm">{{ $choice }}</p>
+                                    </button>
+                                @endforeach
+                            </div>
                         </div>
                     </template>
 
@@ -403,6 +421,16 @@
                     const isCorrect = side === this.challenge.payload.answer_side;
 
                      this.wrongChoice = isCorrect ? null : side;
+                    this.finish(isCorrect);
+                },
+
+                pick(index) {
+                    if (this.busy) {
+                        return;
+                    }
+
+                    const isCorrect = index === this.challenge.payload.answer_index;
+                    this.wrongChoice = isCorrect ? null : index;
                     this.finish(isCorrect);
                 },
             };

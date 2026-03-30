@@ -38,4 +38,21 @@ class GameCommandsTest extends TestCase
             ->expectsOutputToContain('Total pemain')
             ->assertSuccessful();
     }
+
+    public function test_question_can_store_match_audio_image_engine(): void
+    {
+        $question = Question::query()->create([
+            'level' => 4,
+            'tipe_engine' => 'match_audio_image',
+            'payload' => [
+                'prompt' => 'Klik gambar balon!',
+                'target_asset' => 'balon',
+                'choices' => ['balon', 'ayam', 'apel', 'pisang'],
+                'answer_index' => 0,
+            ],
+            'difficulty' => 1,
+        ]);
+
+        $this->assertSame('match_audio_image', $question->tipe_engine);
+    }
 }

@@ -220,10 +220,10 @@ class GamePlay extends Component
             return;
         }
 
-        $assets = config('svg-assets.assets', ['apel', 'kucing', 'balon']);
+        $assets = config('svg-assets.assets', ['apel', 'kucing', 'balon', 'jeruk', 'mangga', 'pisang', 'anggur', 'semangka', 'anggur']);
 
         for ($i = $count; $i < 15; $i++) {
-            $enginePool = ['tap_collector', 'macro_dnd', 'binary_choice'];
+            $enginePool = ['tap_collector', 'macro_dnd', 'binary_choice', 'match_audio_image'];
             $engine = $enginePool[$i % count($enginePool)];
             $payload = ChallengePayloadFactory::make($level, $engine, $assets);
 

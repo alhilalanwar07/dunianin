@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->integer('level')->index('idx_level');
-            $table->enum('tipe_engine', ['tap_collector', 'macro_dnd', 'binary_choice'])->index('idx_engine');
+            $table->string('tipe_engine', 50)->index('idx_engine');
             $table->json('payload'); // Full game config from AI
             $table->integer('difficulty')->default(1);
             $table->timestamps();

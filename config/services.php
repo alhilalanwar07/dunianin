@@ -47,4 +47,10 @@ return [
         'notify_wrong' => env('TELEGRAM_NOTIFY_WRONG', false),
     ],
 
+    'dashscope' => [
+        'api_key' => env('DASHSCOPE_API_KEY'),
+        'model' => env('DASHSCOPE_MODEL', 'wanx2.1-t2i-turbo'),
+        'base_url' => env('DASHSCOPE_BASE_URL', 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1'),
+    ],
+
 ];

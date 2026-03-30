@@ -182,4 +182,35 @@ class GameFlowTest extends TestCase
 
         $this->assertNotSame($first['instance_key'], $second['instance_key']);
     }
+
+    public function test_match_audio_image_challenge_renders_without_svg_dependency_error(): void
+    {
+        $player = Player::query()->create([
+            'username' => 'Eka',
+            'session_token' => '66666666-6666-6666-6666-666666666666',
+            'current_level' => 4,
+            'total_score' => 0,
+            'challenges_completed' => 0,
+            'last_active_at' => now(),
+        ]);
+
+        $this->withSession(['player_id' => $player->id]);
+
+        Livewire::test(GamePlay::class)
+            ->set('state', 'arena')
+            ->set('currentChallenge', [
+                'question_id' => 'question-match-audio-image',
+                'instance_key' => 'question-match-audio-image-1',
+                'engine' => 'match_audio_image',
+                'prompt' => 'Klik gambar balon!',
+                'payload' => [
+                    'target_asset' => 'balon',
+                    'choices' => ['balon', 'ayam', 'apel', 'pisang'],
+                    'answer_index' => 0,
+                ],
+            ])
+            ->assertSee('Pilih gambar yang cocok dengan suaranya!')
+            ->assertSee('balon')
+            ->assertSee('ayam');
+    }
 }
