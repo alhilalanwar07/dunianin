@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="description" content="Dunia Anin — Game edukasi interaktif untuk anak">
     <meta name="theme-color" content="#FBBF24">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,7 +21,7 @@
     @endif
     @livewireStyles
 </head>
-<body class="min-h-screen bg-amber-50 font-sans text-amber-900 overflow-hidden">
+<body class="min-h-dvh overflow-hidden bg-amber-50 font-sans text-amber-900 overscroll-none">
 
     {{-- Portrait Rotate Message --}}
     <div class="rotate-message">
@@ -32,7 +32,7 @@
     </div>
 
     {{-- Main Game Container --}}
-    <div class="game-container w-screen h-screen">
+    <div class="game-container h-dvh min-h-dvh w-full">
         {{ $slot }}
     </div>
 
